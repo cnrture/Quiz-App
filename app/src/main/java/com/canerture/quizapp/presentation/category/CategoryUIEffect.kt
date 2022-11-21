@@ -1,6 +1,8 @@
 package com.canerture.quizapp.presentation.category
 
-sealed class CategoryUIEffect {
+import com.canerture.quizapp.presentation.common.Effect
+
+sealed class CategoryUIEffect : Effect {
     class GoToQuizScreen(val category: Int, val difficulty: String, val type: String) :
         CategoryUIEffect()
 

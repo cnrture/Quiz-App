@@ -2,14 +2,15 @@ package com.canerture.quizapp.delegation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.canerture.quizapp.presentation.UIState
+import com.canerture.quizapp.presentation.common.Effect
+import com.canerture.quizapp.presentation.common.Event
+import com.canerture.quizapp.presentation.common.State
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ViewModelDelegationImpl<EFFECT, EVENT, STATE> : ViewModelDelegation<EFFECT, EVENT, STATE> {
+class ViewModelDelegationImpl<EFFECT : Effect, EVENT : Event, STATE : State> :
+    ViewModelDelegation<EFFECT, EVENT, STATE> {
 
     private lateinit var viewModel: ViewModel
 
@@ -19,11 +20,14 @@ class ViewModelDelegationImpl<EFFECT, EVENT, STATE> : ViewModelDelegation<EFFECT
     private val _eventTemp = MutableSharedFlow<EVENT>()
     override val event = _eventTemp.asSharedFlow()
 
-    private val _stateTemp = MutableStateFlow(UIState<STATE>())
-    override val state = _stateTemp.asStateFlow()
+    private val _stateTemp = MutableSharedFlow<STATE>()
+    override val state = _stateTemp.asSharedFlow()
 
-    override fun initViewModel(viewModel: ViewModel) {
+    override fun initViewModel(viewModel: ViewModel, initialState: STATE) {
         this.viewModel = viewModel
+        this.viewModel.viewModelScope.launch {
+            _stateTemp.emit(initialState)
+        }
     }
 
     override fun setEffect(effect: EFFECT) {
@@ -38,9 +42,9 @@ class ViewModelDelegationImpl<EFFECT, EVENT, STATE> : ViewModelDelegation<EFFECT
         }
     }
 
-    override fun setState(state: UIState<STATE>) {
+    override fun setState(state: STATE) {
         viewModel.viewModelScope.launch {
-            _stateTemp.value = state
+            _stateTemp.emit(state)
         }
     }
 }

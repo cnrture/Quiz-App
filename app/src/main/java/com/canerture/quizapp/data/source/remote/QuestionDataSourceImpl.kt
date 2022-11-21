@@ -6,10 +6,10 @@ import com.canerture.quizapp.domain.source.remote.QuestionDataSource
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
 class QuestionDataSourceImpl @Inject constructor(
     private val questionService: QuestionService

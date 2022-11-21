@@ -9,12 +9,11 @@ import com.canerture.quizapp.delegation.ViewModelDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import com.canerture.quizapp.domain.usecase.SaveTokenUseCase
-import com.canerture.quizapp.presentation.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -22,11 +21,11 @@ class HomeViewModel @Inject constructor(
     private val getTokenFromDataStoreUseCase: GetTokenFromDataStoreUseCase,
     private val saveTokenUseCase: SaveTokenUseCase
 ) : ViewModel(),
-    ViewModelDelegation<HomeUIEffect, HomeEvent, Unit> by ViewModelDelegationImpl() {
+    ViewModelDelegation<HomeUIEffect, HomeEvent, HomeUIState> by ViewModelDelegationImpl() {
 
     init {
 
-        initViewModel(this)
+        initViewModel(this, HomeUIState(loadingState = true))
 
         getSessionTokenFromDataStore()
 
@@ -48,7 +47,7 @@ class HomeViewModel @Inject constructor(
         getTokenFromDataStoreUseCase.invoke().onEach {
             when (it) {
                 is Resource.Success -> {
-                    setState(UIState(loadingState = false))
+                    setState(HomeUIState(loadingState = false))
                     SessionManager.sessionToken = it.data
                 }
                 is Resource.Error -> getSessionToken()
@@ -57,15 +56,15 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getSessionToken() {
-        setState(UIState(loadingState = true))
+        setState(HomeUIState(loadingState = true))
         getSessionTokenUseCase.invoke().onEach {
             when (it) {
                 is Resource.Success -> {
-                    setState(UIState(loadingState = false))
+                    setState(HomeUIState(loadingState = false))
                     saveTokenUseCase.invoke(it.data)
                 }
                 is Resource.Error -> {
-                    setState(UIState(loadingState = false))
+                    setState(HomeUIState(loadingState = false))
                     setEffect(HomeUIEffect.ShowFullScreenError("Session Token Not Found!"))
                 }
             }

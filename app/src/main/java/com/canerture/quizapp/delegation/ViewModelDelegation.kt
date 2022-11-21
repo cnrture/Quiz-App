@@ -1,23 +1,24 @@
 package com.canerture.quizapp.delegation
 
 import androidx.lifecycle.ViewModel
-import com.canerture.quizapp.presentation.UIState
+import com.canerture.quizapp.presentation.common.Effect
+import com.canerture.quizapp.presentation.common.Event
+import com.canerture.quizapp.presentation.common.State
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 
-interface ViewModelDelegation<EFFECT, EVENT, STATE> {
+interface ViewModelDelegation<EFFECT : Effect, EVENT : Event, STATE : State> {
 
-    fun initViewModel(viewModel: ViewModel)
+    fun initViewModel(viewModel: ViewModel, initialState: STATE)
 
     fun setEffect(effect: EFFECT)
 
     fun setEvent(event: EVENT)
 
-    fun setState(state: UIState<STATE>)
+    fun setState(state: STATE)
 
     val effect: SharedFlow<EFFECT>
 
     val event: SharedFlow<EVENT>
 
-    val state: StateFlow<UIState<STATE>>
+    val state: SharedFlow<STATE>
 }

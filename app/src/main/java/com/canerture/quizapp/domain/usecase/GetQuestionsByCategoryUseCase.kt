@@ -3,11 +3,11 @@ package com.canerture.quizapp.domain.usecase
 import com.canerture.quizapp.common.Resource
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.repository.QuestionRepository
-import com.canerture.quizapp.mapper.toQuestionUI
-import javax.inject.Inject
+import com.canerture.quizapp.mapper.toQuestionUIList
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
 class GetQuestionsByCategoryUseCase @Inject constructor(
     private val questionRepository: QuestionRepository
@@ -21,21 +21,11 @@ class GetQuestionsByCategoryUseCase @Inject constructor(
             when (result) {
                 is Resource.Success -> {
 
-                    val questions = mutableListOf<QuestionUI>()
-
-                    result.data.questions?.forEach {
-                        if (it.question != null) {
-                            it.incorrectAnswers?.forEach { incorrectAnswer ->
-                                if (incorrectAnswer != null) {
-                                    questions.add(it.toQuestionUI())
-                                }
-                            }
-                        }
+                    result.data.questions?.let {
+                        trySend(Resource.Success(it.toQuestionUIList()))
                     } ?: kotlin.run {
                         trySend(Resource.Error("Empty question list!"))
                     }
-
-                    trySend(Resource.Success(questions))
                 }
                 is Resource.Error -> {
                     trySend(Resource.Error(result.message))

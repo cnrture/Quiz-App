@@ -1,5 +1,7 @@
 package com.canerture.quizapp.presentation.quiz
 
-sealed class QuizEvent {
+import com.canerture.quizapp.presentation.common.Event
+
+sealed class QuizEvent : Event {
     object CloseClicked : QuizEvent()
 }

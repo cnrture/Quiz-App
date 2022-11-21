@@ -1,4 +1,4 @@
-package com.canerture.quizapp.presentation
+package com.canerture.quizapp.presentation.common
 
 import androidx.recyclerview.widget.DiffUtil
 

@@ -1,6 +1,8 @@
 package com.canerture.quizapp.presentation.home
 
-sealed class HomeUIEffect {
+import com.canerture.quizapp.presentation.common.Effect
+
+sealed class HomeUIEffect : Effect {
     object GoToCategoryScreen : HomeUIEffect()
     class ShowError(val message: String) : HomeUIEffect()
     class ShowFullScreenError(val message: String) : HomeUIEffect()
