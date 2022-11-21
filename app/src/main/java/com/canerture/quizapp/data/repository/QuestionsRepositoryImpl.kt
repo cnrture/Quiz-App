@@ -2,6 +2,7 @@ package com.canerture.quizapp.data.repository
 
 import com.canerture.quizapp.common.Resource
 import com.canerture.quizapp.data.model.category.Category
+import com.canerture.quizapp.data.model.question.Result
 import com.canerture.quizapp.data.model.token.Token
 import com.canerture.quizapp.domain.repository.DataStoreDataSource
 import com.canerture.quizapp.domain.repository.QuestionRepository
@@ -14,6 +15,13 @@ class QuestionsRepositoryImpl(
 ) : QuestionRepository {
 
     override fun getCategories(): Flow<Resource<Category>> = questionDataSource.getCategories()
+
+    override fun getQuestionsByCategory(
+        category: String,
+        difficulty: String,
+        type: String
+    ): Flow<Resource<Result>> =
+        questionDataSource.getQuestionsByCategory(category, difficulty, type)
 
     override fun getSessionToken(): Flow<Resource<Token>> =
         questionDataSource.getSessionToken()

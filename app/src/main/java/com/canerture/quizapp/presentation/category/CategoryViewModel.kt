@@ -7,31 +7,27 @@ import com.canerture.quizapp.data.model.category.TriviaCategory
 import com.canerture.quizapp.delegation.ViewModelDelegation
 import com.canerture.quizapp.delegation.ViewModelDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetCategoriesUseCase
-import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import com.canerture.quizapp.presentation.UIState
-import com.canerture.quizapp.presentation.home.HomeEvent
-import com.canerture.quizapp.presentation.home.HomeUIEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getTokenFromDataStoreUseCase: GetTokenFromDataStoreUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel(),
     ViewModelDelegation<CategoryUIEffect, CategoryEvent, List<TriviaCategory>> by ViewModelDelegationImpl() {
 
     init {
         getCategories()
-        getSessionTokenFromDataStore()
 
         viewModelScope.launch {
             event.collect {
-                when(it) {
+                when (it) {
                     is CategoryEvent.CategorySelected -> {
-
+                        setEffect(CategoryUIEffect.GoToQuizScreen)
                     }
                 }
             }
@@ -48,11 +44,6 @@ class CategoryViewModel @Inject constructor(
                     setEffect(CategoryUIEffect.ShowError(it.message))
                 }
             }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun getSessionTokenFromDataStore() {
-        getTokenFromDataStoreUseCase.invoke().onEach { token ->
         }.launchIn(viewModelScope)
     }
 }

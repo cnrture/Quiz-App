@@ -15,12 +15,14 @@ import com.canerture.quizapp.R
 import com.canerture.quizapp.common.Constants.EASY
 import com.canerture.quizapp.common.Constants.HARD
 import com.canerture.quizapp.common.Constants.MEDIUM
+import com.canerture.quizapp.common.Constants.MULTIPLE_CHOICE
+import com.canerture.quizapp.common.Constants.TRUE_FALSE
 import com.canerture.quizapp.common.setWidthPercent
 import com.canerture.quizapp.common.showFullPagePopup
 import com.canerture.quizapp.common.showPopup
 import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
-import com.canerture.quizapp.databinding.PopupDifficultyBinding
+import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -51,6 +53,12 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 categoryViewModel.effect.collect { effect ->
                     when (effect) {
+                        CategoryUIEffect.GoBack -> {
+
+                        }
+                        CategoryUIEffect.GoToQuizScreen -> {
+
+                        }
                         is CategoryUIEffect.ShowError -> requireContext().showPopup(
                             iconId = R.drawable.ic_error,
                             title = effect.message,
@@ -71,49 +79,45 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         }
     }
 
-    private fun onCategoryClick(categoryName: String) {
+    private fun onCategoryClick(category: String) {
         showCategoryPopup(
-            description = categoryName,
-            easyListener = {
-                categoryViewModel.setEvent(CategoryEvent.CategorySelected(EASY))
-            },
-            mediumListener = {
-                categoryViewModel.setEvent(CategoryEvent.CategorySelected(MEDIUM))
-            },
-            hardListener = {
-                categoryViewModel.setEvent(CategoryEvent.CategorySelected(HARD))
+            difficultyTypeListener = { difficulty, type ->
+                categoryViewModel.setEvent(
+                    CategoryEvent.CategorySelected(
+                        category,
+                        difficulty,
+                        type
+                    )
+                )
             }
         )
     }
 
     private fun showCategoryPopup(
-        description: String,
-        easyListener: () -> Unit,
-        mediumListener: () -> Unit,
-        hardListener: () -> Unit
+        difficultyTypeListener: (String, String) -> Unit,
     ) {
         Dialog(requireContext()).apply {
-            val binding: PopupDifficultyBinding =
-                PopupDifficultyBinding.inflate(layoutInflater, null, false)
+            val binding: PopupDifficultyTypeBinding =
+                PopupDifficultyTypeBinding.inflate(layoutInflater, null, false)
             setContentView(binding.root)
             setWidthPercent(75)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             setCancelable(true)
             setCanceledOnTouchOutside(true)
 
+            var difficulty = EASY
+            var type = MULTIPLE_CHOICE
+
             with(binding) {
-                tvDescription.text = description
-                btnEasy.setOnClickListener {
-                    dismiss()
-                    easyListener()
-                }
-                btnMedium.setOnClickListener {
-                    dismiss()
-                    mediumListener()
-                }
-                btnMedium.setOnClickListener {
-                    dismiss()
-                    hardListener()
+
+                btnEasy.setOnClickListener { difficulty = EASY }
+                btnMedium.setOnClickListener { difficulty = MEDIUM }
+                btnMedium.setOnClickListener { difficulty = HARD }
+                btnMultipleChoice.setOnClickListener { type = MULTIPLE_CHOICE }
+                btnTrueFalse.setOnClickListener { type = TRUE_FALSE }
+
+                btnPlay.setOnClickListener {
+                    difficultyTypeListener(difficulty, type)
                 }
             }
 
