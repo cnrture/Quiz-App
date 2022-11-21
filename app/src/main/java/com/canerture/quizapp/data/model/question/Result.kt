@@ -6,5 +6,5 @@ data class Result(
     @SerializedName("response_code")
     val responseCode: Int?,
     @SerializedName("results")
-    val results: List<Question?>?
+    val results: List<Question>?
 )
