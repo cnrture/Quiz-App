@@ -11,7 +11,7 @@ interface QuestionRepository {
     fun getCategories(): Flow<Resource<Category>>
 
     fun getQuestionsByCategory(
-        category: String,
+        category: Int,
         difficulty: String,
         type: String
     ): Flow<Resource<Result>>

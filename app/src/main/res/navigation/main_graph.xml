@@ -18,5 +18,28 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.canerture.quizapp.presentation.category.CategoryFragment"
-        android:label="CategoryFragment" />
+        android:label="CategoryFragment" >
+        <action
+            android:id="@+id/categoryToQuiz"
+            app:destination="@id/quizFragment"
+            app:popUpTo="@id/categoryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.canerture.quizapp.presentation.quiz.QuizFragment"
+        android:label="QuizFragment" >
+        <argument
+            android:name="category"
+            app:argType="integer" />
+        <argument android:name="difficulty"
+            app:argType="string" />
+        <argument android:name="type"
+            app:argType="string" />
+        <action
+            android:id="@+id/quizToHome"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/quizFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

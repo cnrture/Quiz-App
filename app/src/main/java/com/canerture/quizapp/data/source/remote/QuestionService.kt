@@ -19,7 +19,7 @@ interface QuestionService {
     @GET("api.php/")
     fun getQuestionsByCategory(
         @Query("amount") amount: Int = 10,
-        @Query("category") category: String,
+        @Query("category") category: Int,
         @Query("difficulty") difficulty: String,
         @Query("type") type: String,
         @Query("token") token: String = SessionManager.sessionToken

@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.canerture.quizapp.data.model.category.TriviaCategory
 import com.canerture.quizapp.databinding.ItemCategoryBinding
-import com.canerture.quizapp.presentation.home.DiffUtilCallback
+import com.canerture.quizapp.presentation.DiffUtilCallback
 
-class CategoriesAdapter(private val onCategoryClick: (String) -> Unit) :
+class CategoriesAdapter(private val onCategoryClick: (Int) -> Unit) :
     RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
     private var list = emptyList<TriviaCategory>()
@@ -30,7 +30,7 @@ class CategoriesAdapter(private val onCategoryClick: (String) -> Unit) :
             binding.btnCategory.text = item.name
 
             binding.btnCategory.setOnClickListener {
-                item.name?.let { onCategoryClick(it) }
+                item.id?.let { onCategoryClick(it) }
             }
         }
     }

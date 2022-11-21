@@ -9,10 +9,10 @@ import com.canerture.quizapp.delegation.ViewModelDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetCategoriesUseCase
 import com.canerture.quizapp.presentation.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
@@ -21,13 +21,22 @@ class CategoryViewModel @Inject constructor(
     ViewModelDelegation<CategoryUIEffect, CategoryEvent, List<TriviaCategory>> by ViewModelDelegationImpl() {
 
     init {
+
+        initViewModel(this)
+
         getCategories()
 
         viewModelScope.launch {
             event.collect {
                 when (it) {
                     is CategoryEvent.CategorySelected -> {
-                        setEffect(CategoryUIEffect.GoToQuizScreen)
+                        setEffect(
+                            CategoryUIEffect.GoToQuizScreen(
+                                it.category,
+                                it.difficulty,
+                                it.type
+                            )
+                        )
                     }
                 }
             }
@@ -37,7 +46,6 @@ class CategoryViewModel @Inject constructor(
     private fun getCategories() {
         getCategoriesUseCase.invoke().onEach {
             when (it) {
-                Resource.Loading -> setState(UIState(loadingState = true))
                 is Resource.Success -> setState(UIState(loadingState = false, data = it.data))
                 is Resource.Error -> {
                     setState(UIState(loadingState = false))

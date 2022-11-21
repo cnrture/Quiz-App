@@ -17,7 +17,7 @@ class QuestionsRepositoryImpl(
     override fun getCategories(): Flow<Resource<Category>> = questionDataSource.getCategories()
 
     override fun getQuestionsByCategory(
-        category: String,
+        category: Int,
         difficulty: String,
         type: String
     ): Flow<Resource<Result>> =

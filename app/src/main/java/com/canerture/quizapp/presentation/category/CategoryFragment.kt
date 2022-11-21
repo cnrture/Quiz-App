@@ -8,9 +8,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
 import com.canerture.quizapp.common.Constants.EASY
 import com.canerture.quizapp.common.Constants.HARD
@@ -24,7 +23,6 @@ import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment(R.layout.fragment_category) {
@@ -38,48 +36,50 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                categoryViewModel.state.collect { homeState ->
-                    binding.progressBar.isVisible = homeState.loadingState
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            categoryViewModel.state.collect {
+                binding.progressBar.isVisible = it.loadingState
 
-                    homeState.data?.let {
-                        binding.rvCategories.adapter = categoriesAdapter
-                        categoriesAdapter.setData(it)
-                    }
+                it.data?.let { categoryList ->
+                    binding.rvCategories.adapter = categoriesAdapter
+                    categoriesAdapter.setData(categoryList)
                 }
             }
+        }
 
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                categoryViewModel.effect.collect { effect ->
-                    when (effect) {
-                        CategoryUIEffect.GoBack -> {
-
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            categoryViewModel.effect.collect {
+                when (it) {
+                    CategoryUIEffect.GoBack -> {
+                    }
+                    is CategoryUIEffect.GoToQuizScreen -> {
+                        val categoryToQuiz = CategoryFragmentDirections.categoryToQuiz(
+                            it.category,
+                            it.difficulty,
+                            it.type
+                        )
+                        findNavController().navigate(categoryToQuiz)
+                    }
+                    is CategoryUIEffect.ShowError -> requireContext().showPopup(
+                        iconId = R.drawable.ic_error,
+                        title = it.message,
+                        dismissListener = {
                         }
-                        CategoryUIEffect.GoToQuizScreen -> {
-
-                        }
-                        is CategoryUIEffect.ShowError -> requireContext().showPopup(
+                    )
+                    is CategoryUIEffect.ShowFullScreenError -> {
+                        requireContext().showFullPagePopup(
                             iconId = R.drawable.ic_error,
-                            title = effect.message,
+                            title = it.message,
                             dismissListener = {
                             }
                         )
-                        is CategoryUIEffect.ShowFullScreenError -> {
-                            requireContext().showFullPagePopup(
-                                iconId = R.drawable.ic_error,
-                                title = effect.message,
-                                dismissListener = {
-                                }
-                            )
-                        }
                     }
                 }
             }
         }
     }
 
-    private fun onCategoryClick(category: String) {
+    private fun onCategoryClick(category: Int) {
         showCategoryPopup(
             difficultyTypeListener = { difficulty, type ->
                 categoryViewModel.setEvent(
@@ -118,6 +118,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
 
                 btnPlay.setOnClickListener {
                     difficultyTypeListener(difficulty, type)
+                    dismiss()
                 }
             }
 

@@ -1,7 +1,7 @@
 package com.canerture.quizapp.di
 
 import android.app.Application
-import com.canerture.quizapp.domain.provider.StringResourceProvider
+import com.canerture.quizapp.infrastructure.provider.StringResourceProvider
 import com.canerture.quizapp.infrastructure.provider.StringResourceProviderImpl
 import dagger.Module
 import dagger.Provides
