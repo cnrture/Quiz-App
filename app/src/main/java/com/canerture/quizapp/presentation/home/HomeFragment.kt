@@ -51,7 +51,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             iconId = R.drawable.ic_error,
                             title = effect.message,
                             dismissListener = {
-                                homeViewModel.setEvent(HomeEvent.SendTokenRequest)
                             }
                         )
                     }

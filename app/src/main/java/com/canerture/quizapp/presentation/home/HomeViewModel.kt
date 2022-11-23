@@ -23,9 +23,6 @@ class HomeViewModel @Inject constructor() :
                     HomeEvent.PlayClicked -> {
                         setEffect(HomeUIEffect.GoToCategoryScreen)
                     }
-                    HomeEvent.SendTokenRequest -> {
-                        // getSessionToken()
-                    }
                 }
             }
         }
