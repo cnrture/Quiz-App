@@ -5,5 +5,7 @@ import com.canerture.quizapp.presentation.common.State
 
 data class QuizUIState(
     val loadingState: Boolean = false,
-    val data: List<QuestionUI>? = null
+    val data: QuestionUI? = null,
+    val questionIndex: Int = 1,
+    val questionCount: Int = 10
 ) : State

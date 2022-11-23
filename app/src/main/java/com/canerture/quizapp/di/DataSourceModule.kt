@@ -1,10 +1,10 @@
 package com.canerture.quizapp.di
 
 import android.content.Context
-import com.canerture.quizapp.data.repository.DataStoreDataSourceImpl
+import com.canerture.quizapp.data.source.local.DataStoreDataSourceImpl
 import com.canerture.quizapp.data.source.remote.QuestionDataSourceImpl
 import com.canerture.quizapp.data.source.remote.QuestionService
-import com.canerture.quizapp.domain.repository.DataStoreDataSource
+import com.canerture.quizapp.domain.source.local.DataStoreDataSource
 import com.canerture.quizapp.domain.source.remote.QuestionDataSource
 import dagger.Module
 import dagger.Provides

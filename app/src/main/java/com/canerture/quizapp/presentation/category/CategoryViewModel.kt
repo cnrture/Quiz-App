@@ -3,24 +3,25 @@ package com.canerture.quizapp.presentation.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.Resource
-import com.canerture.quizapp.delegation.ViewModelDelegation
-import com.canerture.quizapp.delegation.ViewModelDelegationImpl
-import com.canerture.quizapp.domain.usecase.GetCategoriesUseCase
+import com.canerture.quizapp.delegation.VMDelegation
+import com.canerture.quizapp.delegation.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel(),
-    ViewModelDelegation<CategoryUIEffect, CategoryEvent, CategoryUIState> by ViewModelDelegationImpl() {
+    VMDelegation<CategoryUIEffect, CategoryEvent, CategoryUIState> by VMDelegationImpl(
+        CategoryUIState(loadingState = false)
+    ) {
 
     init {
 
-        initViewModel(this, CategoryUIState(loadingState = true))
+        initViewModel(this)
 
         getCategories()
 
@@ -31,7 +32,6 @@ class CategoryViewModel @Inject constructor(
                         setEffect(
                             CategoryUIEffect.GoToQuizScreen(
                                 it.category,
-                                it.difficulty,
                                 it.type
                             )
                         )

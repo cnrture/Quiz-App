@@ -6,9 +6,9 @@ import com.canerture.quizapp.presentation.common.Event
 import com.canerture.quizapp.presentation.common.State
 import kotlinx.coroutines.flow.SharedFlow
 
-interface ViewModelDelegation<EFFECT : Effect, EVENT : Event, STATE : State> {
+interface VMDelegation<EFFECT : Effect, EVENT : Event, STATE : State> {
 
-    fun initViewModel(viewModel: ViewModel, initialState: STATE)
+    fun initViewModel(viewModel: ViewModel)
 
     fun setEffect(effect: EFFECT)
 

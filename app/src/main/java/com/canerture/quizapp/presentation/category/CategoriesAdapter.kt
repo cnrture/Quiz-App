@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.canerture.quizapp.data.model.category.TriviaCategory
+import com.canerture.quizapp.data.model.category.Category
 import com.canerture.quizapp.databinding.ItemCategoryBinding
 import com.canerture.quizapp.presentation.common.DiffUtilCallback
 
 class CategoriesAdapter(private val onCategoryClick: (Int) -> Unit) :
     RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
-    private var list = emptyList<TriviaCategory>()
+    private var list = emptyList<Category>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
@@ -25,19 +25,19 @@ class CategoriesAdapter(private val onCategoryClick: (Int) -> Unit) :
     inner class CategoryViewHolder(private var binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: TriviaCategory) {
+        fun bind(item: Category) {
 
             binding.btnCategory.text = item.name
-
+            binding.imgCategory.setImageResource(item.image)
             binding.btnCategory.setOnClickListener {
-                item.id?.let { onCategoryClick(it) }
+                onCategoryClick(item.id)
             }
         }
     }
 
     override fun getItemCount(): Int = list.size
 
-    fun setData(newList: List<TriviaCategory>) {
+    fun setData(newList: List<Category>) {
         val diffUtil = DiffUtilCallback(
             list, newList,
             itemsTheSame = { oldPosition, newPosition ->

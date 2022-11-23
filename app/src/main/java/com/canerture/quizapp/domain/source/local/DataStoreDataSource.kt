@@ -1,4 +1,4 @@
-package com.canerture.quizapp.domain.repository
+package com.canerture.quizapp.domain.source.local
 
 import kotlinx.coroutines.flow.Flow
 

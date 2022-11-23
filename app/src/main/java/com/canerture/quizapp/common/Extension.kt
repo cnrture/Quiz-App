@@ -6,6 +6,8 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -89,4 +91,10 @@ fun Context.showFullPagePopup(
 
         show()
     }
+}
+
+fun handler(delay: Long, function: () -> Unit) {
+    Handler(Looper.getMainLooper()).postDelayed({
+        function()
+    }, delay)
 }

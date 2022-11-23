@@ -32,13 +32,16 @@
         <argument
             android:name="category"
             app:argType="integer" />
-        <argument android:name="difficulty"
-            app:argType="string" />
         <argument android:name="type"
             app:argType="string" />
         <action
             android:id="@+id/quizToHome"
             app:destination="@id/homeFragment"
+            app:popUpTo="@id/quizFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/quizToCategory"
+            app:destination="@id/categoryFragment"
             app:popUpTo="@id/quizFragment"
             app:popUpToInclusive="true" />
     </fragment>

@@ -5,7 +5,7 @@ import com.canerture.quizapp.domain.model.question.QuestionUI
 
 fun List<Question>.toQuestionUIList() = map {
     QuestionUI(
-        question = it.question.orEmpty(),
+        text = it.text.orEmpty(),
         correctAnswer = it.correctAnswer.orEmpty(),
         incorrectAnswerOne = it.incorrectAnswers?.getOrNull(0).orEmpty(),
         incorrectAnswerTwo = it.incorrectAnswers?.getOrNull(1).orEmpty(),

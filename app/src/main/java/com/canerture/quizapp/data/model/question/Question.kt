@@ -12,7 +12,7 @@ data class Question(
     @SerializedName("incorrect_answers")
     val incorrectAnswers: List<String?>?,
     @SerializedName("question")
-    val question: String?,
+    val text: String?,
     @SerializedName("type")
     val type: String?
 )

@@ -4,4 +4,5 @@ import com.canerture.quizapp.presentation.common.Event
 
 sealed class QuizEvent : Event {
     object CloseClicked : QuizEvent()
+    class AnswerClicked(val isCorrect: Boolean) : QuizEvent()
 }

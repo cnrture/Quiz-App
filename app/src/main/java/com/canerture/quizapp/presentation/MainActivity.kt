@@ -1,4 +1,4 @@
-package com.canerture.quizapp
+package com.canerture.quizapp.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

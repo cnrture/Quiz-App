@@ -11,15 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
-import com.canerture.quizapp.common.Constants.EASY
-import com.canerture.quizapp.common.Constants.HARD
-import com.canerture.quizapp.common.Constants.MEDIUM
+import com.canerture.quizapp.common.*
 import com.canerture.quizapp.common.Constants.MULTIPLE_CHOICE
 import com.canerture.quizapp.common.Constants.TRUE_FALSE
-import com.canerture.quizapp.common.setWidthPercent
-import com.canerture.quizapp.common.showFullPagePopup
-import com.canerture.quizapp.common.showPopup
-import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,10 +34,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             categoryViewModel.state.collect {
                 binding.progressBar.isVisible = it.loadingState
 
-                it.data?.let { categoryList ->
-                    binding.rvCategories.adapter = categoriesAdapter
-                    categoriesAdapter.setData(categoryList)
-                }
+                binding.rvCategories.adapter = categoriesAdapter
+                categoriesAdapter.setData(MockCategories.getCategories())
             }
         }
 
@@ -55,7 +47,6 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                     is CategoryUIEffect.GoToQuizScreen -> {
                         val categoryToQuiz = CategoryFragmentDirections.categoryToQuiz(
                             it.category,
-                            it.difficulty,
                             it.type
                         )
                         findNavController().navigate(categoryToQuiz)
@@ -80,21 +71,15 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     }
 
     private fun onCategoryClick(category: Int) {
-        showCategoryPopup(
-            difficultyTypeListener = { difficulty, type ->
-                categoryViewModel.setEvent(
-                    CategoryEvent.CategorySelected(
-                        category,
-                        difficulty,
-                        type
-                    )
-                )
+        showTypePopup(
+            typeListener = {
+                categoryViewModel.setEvent(CategoryEvent.CategorySelected(category, it))
             }
         )
     }
 
-    private fun showCategoryPopup(
-        difficultyTypeListener: (String, String) -> Unit,
+    private fun showTypePopup(
+        typeListener: (String) -> Unit,
     ) {
         Dialog(requireContext()).apply {
             val binding: PopupDifficultyTypeBinding =
@@ -105,19 +90,14 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             setCancelable(true)
             setCanceledOnTouchOutside(true)
 
-            var difficulty = EASY
             var type = MULTIPLE_CHOICE
 
             with(binding) {
-
-                btnEasy.setOnClickListener { difficulty = EASY }
-                btnMedium.setOnClickListener { difficulty = MEDIUM }
-                btnMedium.setOnClickListener { difficulty = HARD }
                 btnMultipleChoice.setOnClickListener { type = MULTIPLE_CHOICE }
                 btnTrueFalse.setOnClickListener { type = TRUE_FALSE }
 
                 btnPlay.setOnClickListener {
-                    difficultyTypeListener(difficulty, type)
+                    typeListener(type)
                     dismiss()
                 }
             }

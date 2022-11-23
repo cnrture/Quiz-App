@@ -1,4 +1,4 @@
-package com.canerture.quizapp.data.repository
+package com.canerture.quizapp.data.source.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.canerture.quizapp.common.Constants.DATASTORE_NAME
-import com.canerture.quizapp.domain.repository.DataStoreDataSource
+import com.canerture.quizapp.domain.source.local.DataStoreDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

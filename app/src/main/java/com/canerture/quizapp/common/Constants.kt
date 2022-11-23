@@ -11,4 +11,8 @@ object Constants {
 
     const val MULTIPLE_CHOICE = "multiple"
     const val TRUE_FALSE = "boolean"
+
+    const val CATEGORY = "category"
+    const val DIFFICULTY = "difficulty"
+    const val TYPE = "type"
 }
