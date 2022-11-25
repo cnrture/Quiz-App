@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.Constants.CATEGORY
 import com.canerture.quizapp.common.Constants.TYPE
 import com.canerture.quizapp.common.Resource
-import com.canerture.quizapp.delegation.VMDelegation
-import com.canerture.quizapp.delegation.VMDelegationImpl
+import com.canerture.quizapp.delegation.viewmodel.VMDelegation
+import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.usecase.GetQuestionsByCategoryUseCase
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase

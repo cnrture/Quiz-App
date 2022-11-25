@@ -3,8 +3,8 @@ package com.canerture.quizapp.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.Resource
-import com.canerture.quizapp.delegation.VMDelegation
-import com.canerture.quizapp.delegation.VMDelegationImpl
+import com.canerture.quizapp.delegation.viewmodel.VMDelegation
+import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
 import com.canerture.quizapp.common.showFullPagePopup
 import com.canerture.quizapp.common.showPopup
-import com.canerture.quizapp.common.viewBinding
+import com.canerture.quizapp.delegation.viewBinding
 import com.canerture.quizapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 

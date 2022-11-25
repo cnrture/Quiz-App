@@ -17,7 +17,7 @@ import com.canerture.quizapp.common.MockCategories
 import com.canerture.quizapp.common.setWidthPercent
 import com.canerture.quizapp.common.showFullPagePopup
 import com.canerture.quizapp.common.showPopup
-import com.canerture.quizapp.common.viewBinding
+import com.canerture.quizapp.delegation.viewBinding
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
 import dagger.hilt.android.AndroidEntryPoint

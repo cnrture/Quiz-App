@@ -1,4 +1,4 @@
-package com.canerture.quizapp.delegation
+package com.canerture.quizapp.delegation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -2,8 +2,8 @@ package com.canerture.quizapp.presentation.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.canerture.quizapp.delegation.VMDelegation
-import com.canerture.quizapp.delegation.VMDelegationImpl
+import com.canerture.quizapp.delegation.viewmodel.VMDelegation
+import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
