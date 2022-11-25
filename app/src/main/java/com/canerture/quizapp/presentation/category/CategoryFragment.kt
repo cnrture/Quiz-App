@@ -11,9 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
-import com.canerture.quizapp.common.*
 import com.canerture.quizapp.common.Constants.MULTIPLE_CHOICE
 import com.canerture.quizapp.common.Constants.TRUE_FALSE
+import com.canerture.quizapp.common.MockCategories
+import com.canerture.quizapp.common.setWidthPercent
+import com.canerture.quizapp.common.showFullPagePopup
+import com.canerture.quizapp.common.showPopup
+import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
 import dagger.hilt.android.AndroidEntryPoint

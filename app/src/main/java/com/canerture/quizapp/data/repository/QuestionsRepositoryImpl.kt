@@ -1,8 +1,8 @@
 package com.canerture.quizapp.data.repository
 
 import com.canerture.quizapp.common.Resource
-import com.canerture.quizapp.common.SessionManager
 import com.canerture.quizapp.data.model.question.Result
+import com.canerture.quizapp.data.model.token.Token
 import com.canerture.quizapp.domain.repository.QuestionRepository
 import com.canerture.quizapp.domain.source.local.DataStoreDataSource
 import com.canerture.quizapp.domain.source.remote.QuestionDataSource
@@ -17,73 +17,55 @@ class QuestionsRepositoryImpl(
 
     override fun getQuestionsByCategory(
         category: Int,
-        type: String
+        type: String,
+        token: String
     ): Flow<Resource<Result>> = callbackFlow {
-
-        dataStoreDataSource.getToken().collect {
-            it?.let { token ->
-                questionDataSource.getQuestionsByCategory(category, type, token)
-                    .collect { result ->
-                        when (result) {
-                            is Resource.Success -> {
-                                when (result.data.responseCode) {
-                                    3 -> getSessionToken()
-                                    4 -> resetSessionToken(token)
-                                    else -> trySend(Resource.Success(result.data))
-                                }
-                            }
-                            is Resource.Error -> {
-                                trySend(Resource.Error(result.message))
-                            }
-                        }
-                    }
-            } ?: kotlin.run {
-                getSessionToken()
+        try {
+            questionDataSource.getQuestionsByCategory(category, type, token).collect {
+                trySend(Resource.Success(it))
             }
+        } catch (e: Exception) {
+            trySend(Resource.Error(e.message.orEmpty()))
         }
 
         awaitClose { channel.close() }
     }
 
-    private fun getSessionToken() = callbackFlow {
-        questionDataSource.getSessionToken().collect {
-            when (it) {
-                is Resource.Success -> {
-                    it.data.token?.let { token ->
-                        dataStoreDataSource.saveToken(token)
-                        SessionManager.sessionToken = token
-                    } ?: kotlin.run {
-                        trySend(Resource.Error("Something went wrong!"))
-                    }
-                }
-                is Resource.Error -> {
-                    trySend(Resource.Error(it.message))
-                }
+    override fun getTokenFromDataStore(): Flow<String?> = callbackFlow {
+        try {
+            dataStoreDataSource.getToken().collect {
+                trySend(it)
             }
+        } catch (e: Exception) {
+            trySend(e.message.orEmpty())
         }
+
+        awaitClose { channel.close() }
     }
 
-    private fun resetSessionToken(token: String) = callbackFlow {
-        questionDataSource.resetSessionToken(token).collect {
-            when (it) {
-                is Resource.Success -> {
-                    it.data.token?.let { token ->
-                        dataStoreDataSource.saveToken(token)
-                        SessionManager.sessionToken = token
-                    } ?: kotlin.run {
-                        trySend(Resource.Error("Something went wrong!"))
-                    }
-                }
-                is Resource.Error -> {
-                    trySend(Resource.Error(it.message))
-                }
+    override fun getSessionToken(): Flow<Resource<Token>> = callbackFlow {
+        try {
+            questionDataSource.getSessionToken().collect {
+                trySend(Resource.Success(it))
             }
+        } catch (e: Exception) {
+            trySend(Resource.Error(e.message.orEmpty()))
         }
+
+        awaitClose { channel.close() }
     }
 
-    fun getTokenFromDataStore(): Flow<String?> = dataStoreDataSource.getToken()
+    override fun resetSessionToken(token: String): Flow<Resource<Token>> = callbackFlow {
+        try {
+            questionDataSource.resetSessionToken(token).collect {
+                trySend(Resource.Success(it))
+            }
+        } catch (e: Exception) {
+            trySend(Resource.Error(e.message.orEmpty()))
+        }
 
-    suspend fun saveToken(token: String) {
-        dataStoreDataSource.saveToken(token)
+        awaitClose { channel.close() }
     }
+
+    override suspend fun saveToken(token: String) = dataStoreDataSource.saveToken(token)
 }

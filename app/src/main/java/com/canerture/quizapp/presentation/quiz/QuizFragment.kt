@@ -126,11 +126,11 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                 if (button.text.toString() == correctAnswer) {
                     button.setBackgroundColor(requireContext().getColor(R.color.green))
                     button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_correct, 0)
-                    // quizViewModel.setEvent(QuizEvent.AnswerClicked(true))
+                    quizViewModel.setEvent(QuizEvent.AnswerClicked(true))
                 } else {
                     button.setBackgroundColor(requireContext().getColor(R.color.red))
                     button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_incorrect, 0)
-                    // quizViewModel.setEvent(QuizEvent.AnswerClicked(false))
+                    quizViewModel.setEvent(QuizEvent.AnswerClicked(false))
                 }
                 buttonList.forEach { it.isEnabled = false }
             }

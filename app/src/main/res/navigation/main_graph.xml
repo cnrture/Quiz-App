@@ -11,9 +11,7 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/homeToCategory"
-            app:destination="@id/categoryFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"

@@ -14,24 +14,30 @@ class GetQuestionsByCategoryUseCase @Inject constructor(
 ) {
     operator fun invoke(
         category: Int,
-        type: String
-    ): Flow<Resource<List<QuestionUI>>> = callbackFlow {
-        questionRepository.getQuestionsByCategory(category, type)
-            .collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data.questions?.let {
-                            trySend(Resource.Success(it.toQuestionUIList()))
-                        } ?: kotlin.run {
-                            trySend(Resource.Error("Empty question list!"))
-                        }
-                    }
-                    is Resource.Error -> {
-                        trySend(Resource.Error(result.message))
+        type: String,
+        token: String
+    ): Flow<GetQuestionsByCategoryState> = callbackFlow {
+        questionRepository.getQuestionsByCategory(category, type, token).collect {
+            when (it) {
+                is Resource.Success -> {
+                    if (it.data.questions.isNullOrEmpty().not() && it.data.responseCode != null) {
+                        trySend(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionUIList()))
+                    } else {
+                        trySend(GetQuestionsByCategoryState.Error("Empty question list!"))
                     }
                 }
+                is Resource.Error -> {
+                    trySend(GetQuestionsByCategoryState.Error(it.message))
+                }
             }
+        }
 
         awaitClose { channel.close() }
+    }
+
+    sealed class GetQuestionsByCategoryState {
+        class Success(val questionList: List<QuestionUI>) : GetQuestionsByCategoryState()
+        object TokenEmpty : GetQuestionsByCategoryState()
+        class Error(val errorMessage: String) : GetQuestionsByCategoryState()
     }
 }
