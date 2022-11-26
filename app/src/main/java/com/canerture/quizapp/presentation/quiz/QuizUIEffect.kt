@@ -1,6 +1,6 @@
 package com.canerture.quizapp.presentation.quiz
 
-import com.canerture.quizapp.presentation.common.Effect
+import com.canerture.quizapp.common.Effect
 
 sealed class QuizUIEffect : Effect {
     object GoBack : QuizUIEffect()

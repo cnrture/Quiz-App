@@ -3,6 +3,7 @@ package com.canerture.quizapp.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.Resource
+import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.delegation.viewmodel.VMDelegation
 import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
@@ -11,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -26,12 +26,10 @@ class HomeViewModel @Inject constructor(
 
         getTokenFromDataStore()
 
-        viewModelScope.launch {
-            event.collect {
-                when (it) {
-                    HomeEvent.PlayClicked -> {
-                        setEffect(HomeUIEffect.GoToCategoryScreen)
-                    }
+        event.collect(viewModelScope) {
+            when (it) {
+                HomeEvent.PlayClicked -> {
+                    setEffect(HomeUIEffect.GoToCategoryScreen)
                 }
             }
         }

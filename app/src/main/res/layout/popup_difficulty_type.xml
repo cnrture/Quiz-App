@@ -14,69 +14,6 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_multiple_choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Multiple Choice"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@+id/divider"
-            app:layout_constraintEnd_toStartOf="@+id/btn_true_false"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_type" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Play"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_true_false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="True / False"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_multiple_choice"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_multiple_choice"
-            app:layout_constraintTop_toTopOf="@+id/btn_multiple_choice" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_easy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Easy"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_medium"
-            app:layout_constraintEnd_toStartOf="@+id/btn_medium"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_medium" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_difficulty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Select Difficulty"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/btn_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_type"
             android:layout_width="match_parent"
@@ -85,49 +22,49 @@
             android:text="Select Type"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/btn_multiple_choice"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_medium" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Medium"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@+id/tv_type"
-            app:layout_constraintEnd_toStartOf="@+id/btn_hard"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_easy"
-            app:layout_constraintTop_toBottomOf="@+id/tv_difficulty" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_hard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hard"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_medium"
-            app:layout_constraintTop_toTopOf="@+id/btn_medium" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/divider"
-            android:layout_width="0dp"
+            android:layout_width="363dp"
             android:layout_height="2dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/btn_play"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toTopOf="@+id/img_true_false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_multiple_choice" />
+            app:layout_constraintTop_toBottomOf="@+id/img_multiple_choice" />
+
+        <ImageView
+            android:id="@+id/img_multiple_choice"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_type"
+            app:srcCompat="@drawable/ic_multiple_choice" />
+
+        <ImageView
+            android:id="@+id/img_true_false"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:srcCompat="@drawable/ic_true_false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.Constants.CATEGORY
 import com.canerture.quizapp.common.Constants.TYPE
 import com.canerture.quizapp.common.Resource
+import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.delegation.viewmodel.VMDelegation
 import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.model.question.QuestionUI
@@ -17,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -49,29 +49,27 @@ class QuizViewModel @Inject constructor(
             setEffect(QuizUIEffect.ShowError("Something went wrong!"))
         }
 
-        viewModelScope.launch {
-            event.collect {
-                when (it) {
-                    QuizEvent.CloseClicked -> {
-                        setEffect(QuizUIEffect.GoBack)
+        event.collect(viewModelScope) { event ->
+            when (event) {
+                QuizEvent.CloseClicked -> {
+                    setEffect(QuizUIEffect.GoBack)
+                }
+                is QuizEvent.AnswerClicked -> {
+                    if (event.isCorrect) {
+                        println("")
+                    } else {
+                        println("")
                     }
-                    is QuizEvent.AnswerClicked -> {
-                        if (it.isCorrect) {
-                            println("")
-                        } else {
-                            println("")
-                        }
-                        setEffect(QuizUIEffect.ResetUI)
-                        questionIndex++
-                        setState(
-                            QuizUIState(
-                                false,
-                                questionList[questionIndex],
-                                questionIndex,
-                                questionList.size
-                            )
+                    setEffect(QuizUIEffect.ResetUI)
+                    questionIndex++
+                    setState(
+                        QuizUIState(
+                            false,
+                            questionList[questionIndex],
+                            questionIndex,
+                            questionList.size
                         )
-                    }
+                    )
                 }
             }
         }

@@ -7,13 +7,13 @@ import android.widget.Button
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
-import com.canerture.quizapp.common.showFullPagePopup
-import com.canerture.quizapp.common.showPopup
-import com.canerture.quizapp.delegation.viewBinding
+import com.canerture.quizapp.common.extension.collect
+import com.canerture.quizapp.common.extension.showFullPagePopup
+import com.canerture.quizapp.common.extension.showPopup
 import com.canerture.quizapp.databinding.FragmentQuizBinding
+import com.canerture.quizapp.delegation.viewBinding
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,52 +36,46 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                     setEvent(QuizEvent.CloseClicked)
                 }
 
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                    state.collect {
-                        progressBar.isVisible = it.loadingState
+                state.collect(viewLifecycleOwner) { state ->
+                    progressBar.isVisible = state.loadingState
 
-                        it.data?.let { question ->
-                            setData(question, it.questionIndex, it.questionCount)
-                        }
+                    state.data?.let { question ->
+                        setData(question, state.questionIndex, state.questionCount)
                     }
                 }
 
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                    effect.collect { effect ->
-                        when (effect) {
-                            QuizUIEffect.GoBack -> {
-                                findNavController().navigate(R.id.quizToCategory)
+                effect.collect(viewLifecycleOwner) { effect ->
+                    when (effect) {
+                        QuizUIEffect.GoBack -> {
+                            findNavController().navigate(R.id.quizToCategory)
+                        }
+                        is QuizUIEffect.ShowError -> requireContext().showPopup(
+                            iconId = R.drawable.ic_error,
+                            title = effect.message,
+                            dismissListener = {
+                                setEvent(QuizEvent.CloseClicked)
                             }
-                            is QuizUIEffect.ShowError -> requireContext().showPopup(
+                        )
+                        is QuizUIEffect.ShowFullScreenError -> {
+                            requireContext().showFullPagePopup(
                                 iconId = R.drawable.ic_error,
                                 title = effect.message,
                                 dismissListener = {
                                     setEvent(QuizEvent.CloseClicked)
                                 }
                             )
-                            is QuizUIEffect.ShowFullScreenError -> {
-                                requireContext().showFullPagePopup(
-                                    iconId = R.drawable.ic_error,
-                                    title = effect.message,
-                                    dismissListener = {
-                                        setEvent(QuizEvent.CloseClicked)
-                                    }
-                                )
-                            }
-                            QuizUIEffect.ResetUI -> {
-                                timer.cancel()
-                                second = 60
-                                tvTime.text = second.toString()
-                                progressBarCountdown.progress = second
-                                btnAnswerOne.setBackgroundColor(requireContext().getColor(R.color.white))
-                                btnAnswerOne.isEnabled = true
-                                btnAnswerTwo.setBackgroundColor(requireContext().getColor(R.color.white))
-                                btnAnswerTwo.isEnabled = true
-                                btnAnswerThree.setBackgroundColor(requireContext().getColor(R.color.white))
-                                btnAnswerThree.isEnabled = true
-                                btnAnswerFour.setBackgroundColor(requireContext().getColor(R.color.white))
-                                btnAnswerFour.isEnabled = true
-                            }
+                        }
+                        QuizUIEffect.ResetUI -> {
+                            timer.cancel()
+                            second = 60
+                            tvTime.text = second.toString()
+                            progressBarCountdown.progress = second
+                            clearState(
+                                btnAnswerOne,
+                                btnAnswerTwo,
+                                btnAnswerThree,
+                                btnAnswerFour
+                            )
                         }
                     }
                 }
@@ -124,16 +118,25 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
         buttonList.forEach { button ->
             button.setOnClickListener {
                 if (button.text.toString() == correctAnswer) {
-                    button.setBackgroundColor(requireContext().getColor(R.color.green))
-                    button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_correct, 0)
-                    quizViewModel.setEvent(QuizEvent.AnswerClicked(true))
+                    button.setState(R.color.green, R.drawable.ic_correct, true)
                 } else {
-                    button.setBackgroundColor(requireContext().getColor(R.color.red))
-                    button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_incorrect, 0)
-                    quizViewModel.setEvent(QuizEvent.AnswerClicked(false))
+                    button.setState(R.color.red, R.drawable.ic_incorrect, false)
                 }
                 buttonList.forEach { it.isEnabled = false }
             }
+        }
+    }
+
+    private fun Button.setState(color: Int, drawable: Int, isCorrect: Boolean) {
+        setBackgroundColor(requireContext().getColor(color))
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, drawable, 0)
+        quizViewModel.setEvent(QuizEvent.AnswerClicked(isCorrect))
+    }
+
+    private fun clearState(vararg buttonList: Button) {
+        buttonList.forEach { button ->
+            button.setBackgroundColor(requireContext().getColor(R.color.white))
+            button.isEnabled = true
         }
     }
 

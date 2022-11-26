@@ -1,4 +1,4 @@
-package com.canerture.quizapp.common
+package com.canerture.quizapp.common.extension
 
 import android.app.Dialog
 import android.content.Context
@@ -6,28 +6,12 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import com.canerture.quizapp.R
 import com.canerture.quizapp.databinding.FullScreenErrorBinding
 import com.canerture.quizapp.databinding.PopupErrorBinding
-import com.google.android.material.snackbar.Snackbar
-
-fun View.visible() {
-    visibility = View.VISIBLE
-}
-
-fun View.gone() {
-    visibility = View.GONE
-}
-
-fun View.showSnackbar(msg: String) {
-    Snackbar.make(this, msg, 1500).show()
-}
 
 fun Dialog.setWidthPercent(percentage: Int) {
     val percent = percentage.toFloat() / 100
@@ -91,10 +75,4 @@ fun Context.showFullPagePopup(
 
         show()
     }
-}
-
-fun handler(delay: Long, function: () -> Unit) {
-    Handler(Looper.getMainLooper()).postDelayed({
-        function()
-    }, delay)
 }

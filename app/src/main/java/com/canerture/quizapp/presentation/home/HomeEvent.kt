@@ -1,6 +1,6 @@
 package com.canerture.quizapp.presentation.home
 
-import com.canerture.quizapp.presentation.common.Event
+import com.canerture.quizapp.common.Event
 
 sealed class HomeEvent : Event {
     object PlayClicked : HomeEvent()

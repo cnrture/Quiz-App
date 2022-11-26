@@ -5,13 +5,13 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
-import com.canerture.quizapp.common.showFullPagePopup
-import com.canerture.quizapp.common.showPopup
-import com.canerture.quizapp.delegation.viewBinding
+import com.canerture.quizapp.common.extension.collect
+import com.canerture.quizapp.common.extension.showFullPagePopup
+import com.canerture.quizapp.common.extension.showPopup
 import com.canerture.quizapp.databinding.FragmentHomeBinding
+import com.canerture.quizapp.delegation.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,35 +24,35 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnPlay.setOnClickListener {
-            homeViewModel.setEvent(HomeEvent.PlayClicked)
-        }
+        with(binding) {
+            with(homeViewModel) {
+                btnPlay.setOnClickListener {
+                    setEvent(HomeEvent.PlayClicked)
+                }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            homeViewModel.state.collect {
-                binding.progressBar.isVisible = it.loadingState
-            }
-        }
+                state.collect(viewLifecycleOwner) {
+                    progressBar.isVisible = it.loadingState
+                }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            homeViewModel.effect.collect { effect ->
-                when (effect) {
-                    HomeUIEffect.GoToCategoryScreen -> {
-                        findNavController().navigate(R.id.homeToCategory)
-                    }
-                    is HomeUIEffect.ShowError -> requireContext().showPopup(
-                        iconId = R.drawable.ic_error,
-                        title = effect.message,
-                        dismissListener = {
+                effect.collect(viewLifecycleOwner) { effect ->
+                    when (effect) {
+                        HomeUIEffect.GoToCategoryScreen -> {
+                            findNavController().navigate(R.id.homeToCategory)
                         }
-                    )
-                    is HomeUIEffect.ShowFullScreenError -> {
-                        requireContext().showFullPagePopup(
+                        is HomeUIEffect.ShowError -> requireContext().showPopup(
                             iconId = R.drawable.ic_error,
                             title = effect.message,
                             dismissListener = {
                             }
                         )
+                        is HomeUIEffect.ShowFullScreenError -> {
+                            requireContext().showFullPagePopup(
+                                iconId = R.drawable.ic_error,
+                                title = effect.message,
+                                dismissListener = {
+                                }
+                            )
+                        }
                     }
                 }
             }

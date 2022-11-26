@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.canerture.quizapp.common.DiffUtilCallback
 import com.canerture.quizapp.data.model.category.Category
 import com.canerture.quizapp.databinding.ItemCategoryBinding
-import com.canerture.quizapp.presentation.common.DiffUtilCallback
 
 class CategoriesAdapter(private val onCategoryClick: (Int) -> Unit) :
     RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
@@ -27,9 +27,9 @@ class CategoriesAdapter(private val onCategoryClick: (Int) -> Unit) :
 
         fun bind(item: Category) {
 
-            binding.btnCategory.text = item.name
+            binding.tvCategory.text = item.name
             binding.imgCategory.setImageResource(item.image)
-            binding.btnCategory.setOnClickListener {
+            binding.root.setOnClickListener {
                 onCategoryClick(item.id)
             }
         }
