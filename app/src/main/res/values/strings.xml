@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Trivia Crack</string>
+    <string name="question_count_text">Question %1$d of %2$d</string>
+    <string name="question_choice_text">%1$s%2$s</string>
 </resources>

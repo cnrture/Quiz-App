@@ -2,34 +2,36 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screens">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/trivia_logo" />
+        app:srcCompat="@drawable/logo_quiz" />
 
-    <com.google.android.material.button.MaterialButton
+    <com.canerture.quizapp.presentation.base.customview.QuizAppButton
         android:id="@+id/btn_play"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:padding="12dp"
-        android:text="Play"
-        android:textAllCaps="false"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        app:qab_backgroundColor="@color/pink"
+        app:qab_radius="12dp"
+        app:qab_text="Play"
+        app:qab_textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -40,6 +42,7 @@
         android:layout_height="0dp"
         android:background="@color/white"
         android:elevation="2dp"
+        android:max="90"
         android:padding="100dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

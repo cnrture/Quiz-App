@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_quiz_screen">
+    android:background="@drawable/bg_screens">
 
     <ImageView
         android:id="@+id/img_close"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,99 +19,17 @@
         android:id="@+id/tv_question_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
-        android:alpha="0.6"
-        android:text="Question 1 of 10"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_question"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar_countdown" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_question"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginBottom="16dp"
+        android:alpha="0.8"
+        android:text="@string/question_count_text"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
-        app:layout_constraintStart_toStartOf="@+id/tv_question_count"
-        app:layout_constraintTop_toBottomOf="@+id/tv_question_count" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_answer_one"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:text="Button"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="32dp"
-        app:iconGravity="end"
-        app:layout_constraintBottom_toTopOf="@+id/btn_answer_two"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_question" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_answer_two"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Button"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="32dp"
-        app:iconGravity="end"
-        app:layout_constraintBottom_toTopOf="@+id/btn_answer_three"
-        app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/btn_answer_one"
-        app:layout_constraintTop_toBottomOf="@+id/btn_answer_one" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_answer_three"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Button"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="32dp"
-        app:iconGravity="end"
-        app:layout_constraintBottom_toTopOf="@+id/btn_answer_four"
-        app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/btn_answer_one"
-        app:layout_constraintTop_toBottomOf="@+id/btn_answer_two" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_answer_four"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="32dp"
-        android:text="Button"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="32dp"
-        app:iconGravity="end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/btn_answer_one"
-        app:layout_constraintTop_toBottomOf="@+id/btn_answer_three" />
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar_countdown" />
 
     <TextView
         android:id="@+id/tv_time"
@@ -126,21 +44,107 @@
         app:layout_constraintStart_toStartOf="@+id/progress_bar_countdown"
         app:layout_constraintTop_toTopOf="@+id/progress_bar_countdown" />
 
-    <ProgressBar
+    <com.canerture.quizapp.presentation.base.customview.QuizAppProgressBar
         android:id="@+id/progress_bar_countdown"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="64dp"
-        android:indeterminateOnly="false"
-        android:max="60"
-        android:progressDrawable="@drawable/progress_quiz"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="84dp"
+        app:qapb_fillColor="@color/blue"
+        app:layout_constraintBottom_toTopOf="@+id/tv_question_count"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_close" />
+        app:layout_constraintTop_toBottomOf="@+id/img_close"
+        app:qapb_maxProgress="60"
+        app:qapb_parentColor="@color/blue_darkest"
+        app:qapb_progress="30"
+        app:qapb_thickness="6dp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="24dp"
+        app:contentPadding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_question"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/blue_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton
+                android:id="@+id/btn_answer_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:qaab_answerText="Button"
+                app:qaab_choice="A."
+                app:layout_constraintBottom_toTopOf="@+id/btn_answer_two"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_question" />
+
+            <com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton
+                android:id="@+id/btn_answer_two"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:qaab_answerText="Button"
+                app:qaab_choice="B."
+                app:layout_constraintBottom_toTopOf="@+id/btn_answer_three"
+                app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/btn_answer_one"
+                app:layout_constraintTop_toBottomOf="@+id/btn_answer_one" />
+
+            <com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton
+                android:id="@+id/btn_answer_three"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:qaab_answerText="Button"
+                app:qaab_choice="C."
+                app:layout_constraintBottom_toTopOf="@+id/btn_answer_four"
+                app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/btn_answer_one"
+                app:layout_constraintTop_toBottomOf="@+id/btn_answer_two" />
+
+            <com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton
+                android:id="@+id/btn_answer_four"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:qaab_answerText="Button"
+                app:qaab_choice="D."
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btn_answer_one"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/btn_answer_one"
+                app:layout_constraintTop_toBottomOf="@+id/btn_answer_three" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/progressBar"

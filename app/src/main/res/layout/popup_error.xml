@@ -5,12 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButton
+    <com.canerture.quizapp.presentation.base.customview.QuizAppButton
         android:id="@+id/btn_okay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ok"
-        android:textAllCaps="false"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginEnd="84dp"
+        app:qab_backgroundColor="@color/pink"
+        app:qab_text="Okay"
+        app:qab_textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

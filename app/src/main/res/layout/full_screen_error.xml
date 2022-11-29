@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButton
+    <com.canerture.quizapp.presentation.base.customview.QuizAppButton
         android:id="@+id/btn_okay"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:padding="12dp"
-        android:text="Okay"
-        android:textAllCaps="false"
-        android:textSize="20sp"
+        app:qab_text="Okay"
+        app:qab_textStyle="bold"
+        app:qab_backgroundColor="@color/pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/iv_image"
         app:layout_constraintStart_toStartOf="@+id/iv_image"

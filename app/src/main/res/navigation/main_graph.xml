@@ -8,7 +8,7 @@
         android:id="@+id/homeFragment"
         android:name="com.canerture.quizapp.presentation.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/homeToCategory"
             app:destination="@id/categoryFragment" />
@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.canerture.quizapp.presentation.category.CategoryFragment"
-        android:label="CategoryFragment" >
+        android:label="CategoryFragment">
         <action
             android:id="@+id/categoryToQuiz"
             app:destination="@id/quizFragment"
@@ -26,11 +26,12 @@
     <fragment
         android:id="@+id/quizFragment"
         android:name="com.canerture.quizapp.presentation.quiz.QuizFragment"
-        android:label="QuizFragment" >
+        android:label="QuizFragment">
         <argument
             android:name="category"
             app:argType="integer" />
-        <argument android:name="type"
+        <argument
+            android:name="type"
             app:argType="string" />
         <action
             android:id="@+id/quizToHome"

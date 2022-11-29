@@ -8,8 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="blue">#238AF7</color>
-    <color name="blue_dark">#4856E5</color>
-    <color name="green">#388E3C</color>
-    <color name="red">#CC1414</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="blue">#1CD3C3</color>
+    <color name="blue_dark">#1C203A</color>
+    <color name="blue_darkest">#15192E</color>
+    <color name="green">#5bba48</color>
+    <color name="light_green">#EDF9EB</color>
+    <color name="red">#e11625</color>
+    <color name="light_red">#FDE4E5</color>
+    <color name="pink">#FC525B</color>
 </resources>

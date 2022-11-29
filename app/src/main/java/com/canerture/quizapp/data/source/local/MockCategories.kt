@@ -1,4 +1,4 @@
-package com.canerture.quizapp.common
+package com.canerture.quizapp.data.source.local
 
 import com.canerture.quizapp.R
 import com.canerture.quizapp.data.model.category.Category

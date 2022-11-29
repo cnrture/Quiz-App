@@ -15,9 +15,9 @@ import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import com.canerture.quizapp.domain.usecase.ResetSessionTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -54,25 +54,37 @@ class QuizViewModel @Inject constructor(
                 QuizEvent.CloseClicked -> {
                     setEffect(QuizUIEffect.GoBack)
                 }
-                is QuizEvent.AnswerClicked -> {
-                    if (event.isCorrect) {
-                        println("")
+                is QuizEvent.Answered -> {
+                    if (event.answer == questionList[questionIndex].correctAnswer) {
+                        setEffect(QuizUIEffect.CorrectAnswer)
                     } else {
-                        println("")
+                        setEffect(QuizUIEffect.IncorrectAnswer(questionList[questionIndex].correctAnswer))
                     }
-                    setEffect(QuizUIEffect.ResetUI)
-                    questionIndex++
-                    setState(
-                        QuizUIState(
-                            false,
-                            questionList[questionIndex],
-                            questionIndex,
-                            questionList.size
-                        )
-                    )
+                }
+                QuizEvent.NextQuestion -> {
+                    nextQuestion()
+                }
+                QuizEvent.TimeIsUp -> {
+                    // incorrectAnswer logic
+                    nextQuestion()
                 }
             }
         }
+    }
+
+    private fun nextQuestion() {
+        setEffect(QuizUIEffect.NextQuestion)
+        questionIndex++
+        val question = questionList[questionIndex]
+        question.allAnswers.shuffle()
+        setState(
+            QuizUIState(
+                false,
+                question,
+                questionIndex,
+                questionList.size
+            )
+        )
     }
 
     private fun getTokenFromDataStore(category: Int, type: String) {
@@ -107,7 +119,7 @@ class QuizViewModel @Inject constructor(
                 }
                 is GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.Error -> {
                     setState(QuizUIState(loadingState = false))
-                    setEffect(QuizUIEffect.ShowError(state.errorMessage))
+                    setEffect(QuizUIEffect.ShowFullScreenError(state.errorMessage))
                 }
             }
         }.launchIn(viewModelScope)

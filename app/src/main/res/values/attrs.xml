@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="QuizAppButton">
+        <attr name="qab_text" format="string" />
+        <attr name="qab_fontSize" format="dimension" />
+        <attr name="qab_textColor" format="color" />
+        <attr name="qab_backgroundColor" format="color" />
+        <attr name="qab_radius" format="dimension" />
+        <attr name="qab_textStyle" format="string">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="QuizAppAnswerButton">
+        <attr name="qaab_choice" format="string" />
+        <attr name="qaab_answerText" format="string" />
+        <attr name="qaab_isCorrect" format="enum">
+            <enum name="unselected" value="0" />
+            <enum name="correct" value="1" />
+            <enum name="incorrect" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="QuizAppProgressBar">
+        <attr name="qapb_thickness" format="dimension" />
+        <attr name="qapb_maxProgress" format="float" />
+        <attr name="qapb_progress" format="float" />
+        <attr name="qapb_parentColor" format="color" />
+        <attr name="qapb_fillColor" format="color" />
+        <attr name="qapb_indicatorType" format="enum">
+            <enum name="circular" value="0" />
+            <enum name="linear" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>

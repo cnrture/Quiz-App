@@ -3,18 +3,20 @@ package com.canerture.quizapp.presentation.quiz
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.Button
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
 import com.canerture.quizapp.common.extension.collect
+import com.canerture.quizapp.common.extension.handler
 import com.canerture.quizapp.common.extension.showFullPagePopup
 import com.canerture.quizapp.common.extension.showPopup
 import com.canerture.quizapp.databinding.FragmentQuizBinding
 import com.canerture.quizapp.delegation.viewBinding
 import com.canerture.quizapp.domain.model.question.QuestionUI
+import com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton
+import com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton.CorrectType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,11 +28,16 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
 
     private var second = 60
 
+    private lateinit var selectedButton: QuizAppAnswerButton
+    private var buttonList = listOf<QuizAppAnswerButton>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
             with(quizViewModel) {
+
+                buttonList = listOf(btnAnswerOne, btnAnswerTwo, btnAnswerThree, btnAnswerFour)
 
                 imgClose.setOnClickListener {
                     setEvent(QuizEvent.CloseClicked)
@@ -49,33 +56,40 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                         QuizUIEffect.GoBack -> {
                             findNavController().navigate(R.id.quizToCategory)
                         }
-                        is QuizUIEffect.ShowError -> requireContext().showPopup(
-                            iconId = R.drawable.ic_error,
-                            title = effect.message,
-                            dismissListener = {
+                        is QuizUIEffect.ShowError ->
+                            requireContext().showPopup(
+                                R.drawable.ic_error,
+                                effect.message
+                            ) {
                                 setEvent(QuizEvent.CloseClicked)
                             }
-                        )
                         is QuizUIEffect.ShowFullScreenError -> {
                             requireContext().showFullPagePopup(
-                                iconId = R.drawable.ic_error,
-                                title = effect.message,
-                                dismissListener = {
-                                    setEvent(QuizEvent.CloseClicked)
-                                }
-                            )
+                                R.drawable.ic_error,
+                                effect.message
+                            ) {
+                                setEvent(QuizEvent.CloseClicked)
+                            }
                         }
-                        QuizUIEffect.ResetUI -> {
+                        QuizUIEffect.CorrectAnswer -> {
+                            selectedButton.setCorrectState(CorrectType.Correct)
+                            handler(1000) { setEvent(QuizEvent.NextQuestion) }
+                        }
+                        is QuizUIEffect.IncorrectAnswer -> {
+                            selectedButton.setCorrectState(CorrectType.Incorrect)
+                            buttonList.forEach {
+                                if (it.getText() == effect.correctAnswer) {
+                                    it.setCorrectState(CorrectType.Correct)
+                                }
+                            }
+                            handler(1000) { setEvent(QuizEvent.NextQuestion) }
+                        }
+                        QuizUIEffect.NextQuestion -> {
                             timer.cancel()
                             second = 60
                             tvTime.text = second.toString()
-                            progressBarCountdown.progress = second
-                            clearState(
-                                btnAnswerOne,
-                                btnAnswerTwo,
-                                btnAnswerThree,
-                                btnAnswerFour
-                            )
+                            progressBarCountdown.setProgress(second.toFloat())
+                            clearState()
                         }
                     }
                 }
@@ -83,60 +97,32 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
         }
     }
 
-    private fun setData(question: QuestionUI, index: Int, count: Int) {
+    private fun setData(question: QuestionUI, index: Int, count: Int) = with(binding) {
 
-        binding.tvQuestionCount.text = "Question $index of $count"
+        tvQuestionCount.text = getString(R.string.question_count_text, index, count)
+        tvQuestion.text = question.text
 
-        val answers = mutableListOf(
-            question.incorrectAnswerOne,
-            question.incorrectAnswerTwo,
-            question.incorrectAnswerThree,
-            question.correctAnswer
-        )
-        answers.shuffle()
-
-        with(binding) {
-            tvQuestion.text = question.text
-            btnAnswerOne.text = answers[0]
-            btnAnswerTwo.text = answers[1]
-            btnAnswerThree.text = answers[2]
-            btnAnswerFour.text = answers[3]
-
-            checkAnswer(
-                btnAnswerOne,
-                btnAnswerTwo,
-                btnAnswerThree,
-                btnAnswerFour,
-                correctAnswer = question.correctAnswer
-            )
+        buttonList.mapIndexed { index, button ->
+            button.setAnswer(question.allAnswers[index])
         }
+
+        checkAnswer()
 
         timer.start()
     }
 
-    private fun checkAnswer(vararg buttonList: Button, correctAnswer: String) {
+    private fun checkAnswer() {
         buttonList.forEach { button ->
             button.setOnClickListener {
-                if (button.text.toString() == correctAnswer) {
-                    button.setState(R.color.green, R.drawable.ic_correct, true)
-                } else {
-                    button.setState(R.color.red, R.drawable.ic_incorrect, false)
-                }
-                buttonList.forEach { it.isEnabled = false }
+                selectedButton = button
+                quizViewModel.setEvent(QuizEvent.Answered(button.getText()))
             }
         }
     }
 
-    private fun Button.setState(color: Int, drawable: Int, isCorrect: Boolean) {
-        setBackgroundColor(requireContext().getColor(color))
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, drawable, 0)
-        quizViewModel.setEvent(QuizEvent.AnswerClicked(isCorrect))
-    }
-
-    private fun clearState(vararg buttonList: Button) {
+    private fun clearState() {
         buttonList.forEach { button ->
-            button.setBackgroundColor(requireContext().getColor(R.color.white))
-            button.isEnabled = true
+            button.clearAnswer()
         }
     }
 
@@ -144,11 +130,11 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
         override fun onTick(millisUntilFinished: Long) {
             second--
             binding.tvTime.text = second.toString()
-            binding.progressBarCountdown.progress = second
+            binding.progressBarCountdown.setProgress(second.toFloat())
         }
 
         override fun onFinish() {
-            quizViewModel.setEvent(QuizEvent.AnswerClicked(false))
+            quizViewModel.setEvent(QuizEvent.TimeIsUp)
         }
     }
 

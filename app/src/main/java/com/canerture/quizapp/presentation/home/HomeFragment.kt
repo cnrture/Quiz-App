@@ -12,6 +12,7 @@ import com.canerture.quizapp.common.extension.showFullPagePopup
 import com.canerture.quizapp.common.extension.showPopup
 import com.canerture.quizapp.databinding.FragmentHomeBinding
 import com.canerture.quizapp.delegation.viewBinding
+import com.canerture.quizapp.presentation.activity.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,19 +40,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         HomeUIEffect.GoToCategoryScreen -> {
                             findNavController().navigate(R.id.homeToCategory)
                         }
-                        is HomeUIEffect.ShowError -> requireContext().showPopup(
-                            iconId = R.drawable.ic_error,
-                            title = effect.message,
-                            dismissListener = {
+                        is HomeUIEffect.ShowError ->
+                            requireContext().showPopup(R.drawable.ic_error, effect.message) {
+                                (activity as MainActivity).finish()
                             }
-                        )
                         is HomeUIEffect.ShowFullScreenError -> {
                             requireContext().showFullPagePopup(
-                                iconId = R.drawable.ic_error,
-                                title = effect.message,
-                                dismissListener = {
-                                }
-                            )
+                                R.drawable.ic_error,
+                                effect.message
+                            ) {
+                                (activity as MainActivity).finish()
+                            }
                         }
                     }
                 }

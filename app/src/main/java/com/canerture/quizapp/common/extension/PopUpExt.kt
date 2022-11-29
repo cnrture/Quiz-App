@@ -24,7 +24,7 @@ fun Dialog.setWidthPercent(percentage: Int) {
 fun Context.showPopup(
     @DrawableRes iconId: Int,
     title: String,
-    dismissListener: () -> Unit
+    dismissListener: () -> Unit,
 ) {
     Dialog(this).apply {
         val binding = PopupErrorBinding.inflate(layoutInflater, null, false)
