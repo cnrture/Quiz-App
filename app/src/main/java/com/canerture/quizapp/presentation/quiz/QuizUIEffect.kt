@@ -4,6 +4,7 @@ import com.canerture.quizapp.presentation.base.Effect
 
 sealed class QuizUIEffect : Effect {
     object GoBack : QuizUIEffect()
+    class GoToResult(val correctAnswers: Int) : QuizUIEffect()
     class ShowError(val message: String) : QuizUIEffect()
     class ShowFullScreenError(val message: String) : QuizUIEffect()
     object CorrectAnswer : QuizUIEffect()

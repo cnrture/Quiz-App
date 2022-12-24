@@ -91,6 +91,10 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                             progressBarCountdown.setProgress(second.toFloat())
                             clearState()
                         }
+                        is QuizUIEffect.GoToResult -> {
+                            val action = QuizFragmentDirections.quizToResult(effect.correctAnswers)
+                            findNavController().navigate(action)
+                        }
                     }
                 }
             }
@@ -99,7 +103,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
 
     private fun setData(question: QuestionUI, index: Int, count: Int) = with(binding) {
 
-        tvQuestionCount.text = getString(R.string.question_count_text, index, count)
+        tvQuestionCount.text = "Question $index of $count"
         tvQuestion.text = question.text
 
         buttonList.mapIndexed { index, button ->

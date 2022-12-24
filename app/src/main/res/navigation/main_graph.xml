@@ -43,5 +43,23 @@
             app:destination="@id/categoryFragment"
             app:popUpTo="@id/quizFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/quizToResult"
+            app:destination="@id/resultFragment"
+            app:popUpTo="@id/quizFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.canerture.quizapp.presentation.result.ResultFragment"
+        android:label="ResultFragment" >
+        <argument
+            android:name="correctAnswers"
+            app:argType="integer" />
+        <action
+            android:id="@+id/resultToHome"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/resultFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

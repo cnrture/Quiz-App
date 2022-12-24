@@ -10,4 +10,6 @@ object Constants {
 
     const val CATEGORY = "category"
     const val TYPE = "type"
+
+    const val CORRECT_ANSWERS = "correctAnswers"
 }

@@ -15,9 +15,9 @@ import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import com.canerture.quizapp.domain.usecase.ResetSessionTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -29,11 +29,13 @@ class QuizViewModel @Inject constructor(
 ) : ViewModel(),
     VMDelegation<QuizUIEffect, QuizEvent, QuizUIState> by VMDelegationImpl(QuizUIState(loadingState = true)) {
 
-    private var questionIndex = 1
+    private var questionIndex = 0
     private var questionList = listOf<QuestionUI>()
 
     var category: Int? = null
     var type: String? = null
+
+    private var correctAnswers = 0
 
     init {
 
@@ -56,17 +58,25 @@ class QuizViewModel @Inject constructor(
                 }
                 is QuizEvent.Answered -> {
                     if (event.answer == questionList[questionIndex].correctAnswer) {
+                        correctAnswers++
                         setEffect(QuizUIEffect.CorrectAnswer)
                     } else {
                         setEffect(QuizUIEffect.IncorrectAnswer(questionList[questionIndex].correctAnswer))
                     }
                 }
                 QuizEvent.NextQuestion -> {
-                    nextQuestion()
+                    if (questionIndex == 9) {
+                        setEffect(QuizUIEffect.GoToResult(correctAnswers))
+                    } else {
+                        nextQuestion()
+                    }
                 }
                 QuizEvent.TimeIsUp -> {
-                    // incorrectAnswer logic
-                    nextQuestion()
+                    if (questionIndex == 9) {
+                        setEffect(QuizUIEffect.GoToResult(correctAnswers))
+                    } else {
+                        nextQuestion()
+                    }
                 }
             }
         }
@@ -81,7 +91,7 @@ class QuizViewModel @Inject constructor(
             QuizUIState(
                 false,
                 question,
-                questionIndex,
+                questionIndex + 1,
                 questionList.size
             )
         )
@@ -108,7 +118,7 @@ class QuizViewModel @Inject constructor(
                             QuizUIState(
                                 loadingState = false,
                                 list[questionIndex],
-                                questionIndex,
+                                questionIndex + 1,
                                 list.size
                             )
                         )

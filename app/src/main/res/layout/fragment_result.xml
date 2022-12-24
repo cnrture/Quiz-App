@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screens"
+    android:padding="24dp">
+
+    <ImageView
+        android:id="@+id/img_result"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/progress_bar_result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/ic_correct" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60"
+        android:textColor="@color/white"
+        android:textSize="44sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar_result"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar_result"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar_result"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar_result" />
+
+    <com.canerture.quizapp.presentation.base.customview.QuizAppProgressBar
+        android:id="@+id/progress_bar_result"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="84dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_result_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_result"
+        app:qapb_fillColor="@color/green"
+        app:qapb_maxProgress="100"
+        app:qapb_parentColor="@color/blue_darkest"
+        app:qapb_progress="50"
+        app:qapb_thickness="6dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_result_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:alpha="0.8"
+        android:text="You're rock!"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_continue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar_result" />
+
+    <com.canerture.quizapp.presentation.base.customview.QuizAppButton
+        android:id="@+id/btn_continue"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_result_title"
+        app:qab_backgroundColor="@color/pink"
+        app:qab_text="Continue" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
