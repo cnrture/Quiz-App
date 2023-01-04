@@ -28,8 +28,4 @@ class QuestionDataSourceImpl @Inject constructor(
     override fun getSessionToken(): Flow<Token> = flow {
         emit(questionService.getSessionToken())
     }
-
-    override fun resetSessionToken(token: String): Flow<Token> = flow {
-        emit(questionService.resetSessionToken(token = token))
-    }
 }

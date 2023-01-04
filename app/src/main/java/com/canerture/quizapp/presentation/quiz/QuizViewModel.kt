@@ -13,7 +13,6 @@ import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.usecase.GetQuestionsByCategoryUseCase
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
-import com.canerture.quizapp.domain.usecase.ResetSessionTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
@@ -23,7 +22,6 @@ import kotlinx.coroutines.flow.onEach
 class QuizViewModel @Inject constructor(
     private val getTokenFromDataStoreUseCase: GetTokenFromDataStoreUseCase,
     private val getSessionTokenUseCase: GetSessionTokenUseCase,
-    private val resetSessionTokenUseCase: ResetSessionTokenUseCase,
     private val getQuestionsByCategoryUseCase: GetQuestionsByCategoryUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
@@ -124,26 +122,12 @@ class QuizViewModel @Inject constructor(
                         )
                     }
                 }
-                is GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.TokenEmpty -> {
-                    resetSessionToken(token)
+                GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.TokenEmpty -> {
+                    getSessionToken()
                 }
                 is GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.Error -> {
                     setState(QuizUIState(loadingState = false))
                     setEffect(QuizUIEffect.ShowFullScreenError(state.errorMessage))
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun resetSessionToken(token: String) {
-        resetSessionTokenUseCase.invoke(token).onEach {
-            when (it) {
-                is Resource.Success -> {
-                    getTokenFromDataStore(category!!, type!!)
-                }
-                is Resource.Error -> {
-                    setState(QuizUIState(loadingState = false))
-                    setEffect(QuizUIEffect.ShowError(it.message))
                 }
             }
         }.launchIn(viewModelScope)

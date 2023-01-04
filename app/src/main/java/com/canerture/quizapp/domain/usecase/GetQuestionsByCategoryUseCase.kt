@@ -20,10 +20,14 @@ class GetQuestionsByCategoryUseCase @Inject constructor(
         questionRepository.getQuestionsByCategory(category, type, token).collect {
             when (it) {
                 is Resource.Success -> {
-                    if (it.data.questions.isNullOrEmpty().not() && it.data.responseCode != null) {
-                        trySend(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionUIList()))
+                    if (it.data.responseCode == 3) {
+                        trySend(GetQuestionsByCategoryState.TokenEmpty)
                     } else {
-                        trySend(GetQuestionsByCategoryState.Error("Empty question list!"))
+                        if (it.data.questions.isNullOrEmpty().not()) {
+                            trySend(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionUIList()))
+                        } else {
+                            trySend(GetQuestionsByCategoryState.Error("Empty question list!"))
+                        }
                     }
                 }
                 is Resource.Error -> {

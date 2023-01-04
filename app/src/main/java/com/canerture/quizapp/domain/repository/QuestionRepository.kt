@@ -17,7 +17,5 @@ interface QuestionRepository {
 
     fun getSessionToken(): Flow<Resource<Token>>
 
-    fun resetSessionToken(token: String): Flow<Resource<Token>>
-
     suspend fun saveToken(token: String)
 }

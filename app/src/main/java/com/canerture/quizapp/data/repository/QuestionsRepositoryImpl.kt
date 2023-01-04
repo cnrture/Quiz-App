@@ -55,17 +55,5 @@ class QuestionsRepositoryImpl(
         awaitClose { channel.close() }
     }
 
-    override fun resetSessionToken(token: String): Flow<Resource<Token>> = callbackFlow {
-        try {
-            questionDataSource.resetSessionToken(token).collect {
-                trySend(Resource.Success(it))
-            }
-        } catch (e: Exception) {
-            trySend(Resource.Error(e.message.orEmpty()))
-        }
-
-        awaitClose { channel.close() }
-    }
-
     override suspend fun saveToken(token: String) = dataStoreDataSource.saveToken(token)
 }

@@ -13,6 +13,4 @@ interface QuestionDataSource {
     ): Flow<Result>
 
     fun getSessionToken(): Flow<Token>
-
-    fun resetSessionToken(token: String): Flow<Token>
 }
