@@ -21,31 +21,37 @@ class ResultFragment : Fragment(R.layout.fragment_result) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        collectState()
+        collectEffect()
+
+        binding.btnContinue.setOnClickListener {
+            quizViewModel.setEvent(ResultEvent.ContinueClicked)
+        }
+    }
+
+    private fun collectState() = quizViewModel.state.collect(viewLifecycleOwner) { state ->
         with(binding) {
-            with(quizViewModel) {
-
-                btnContinue.setOnClickListener {
-                    setEvent(ResultEvent.ContinueClicked)
-                }
-
-                state.collect(viewLifecycleOwner) { state ->
+            when (state) {
+                ResultUIState.Loading -> Unit
+                is ResultUIState.Data -> {
                     tvScore.text = "%${String.format("%.1f", state.result)}"
                     progressBarResult.setProgress(state.result)
 
-                    if (state.result <= 50) {
+                    if (state.lowerThanFifty) {
                         imgResult.setImageResource(R.drawable.ic_incorrect)
-                        progressBarResult.setFillColor(R.color.pink)
-                    }
-                }
-
-                effect.collect(viewLifecycleOwner) { effect ->
-                    when (effect) {
-                        ResultUIEffect.GoHome -> {
-                            findNavController().navigate(R.id.resultToHome)
-                        }
+                        progressBarResult.setFillColor(requireContext().getColor(R.color.pink))
+                    } else {
+                        imgResult.setImageResource(R.drawable.ic_correct)
+                        progressBarResult.setFillColor(requireContext().getColor(R.color.green))
                     }
                 }
             }
+        }
+    }
+
+    private fun collectEffect() = quizViewModel.effect.collect(viewLifecycleOwner) { effect ->
+        when (effect) {
+            ResultUIEffect.GoHome -> findNavController().navigate(R.id.resultToHome)
         }
     }
 }

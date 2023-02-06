@@ -2,12 +2,14 @@ package com.canerture.quizapp.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.canerture.quizapp.common.Resource
+import com.canerture.quizapp.R
 import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.delegation.viewmodel.VMDelegation
 import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
+import com.canerture.quizapp.domain.usecase.SaveTokenUseCase
+import com.canerture.quizapp.infrastructure.provider.StringResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
@@ -17,20 +19,24 @@ import kotlinx.coroutines.flow.onEach
 class HomeViewModel @Inject constructor(
     private val getTokenFromDataStoreUseCase: GetTokenFromDataStoreUseCase,
     private val getSessionTokenUseCase: GetSessionTokenUseCase,
+    private val saveTokenUseCase: SaveTokenUseCase,
+    private val stringResourceProvider: StringResourceProvider
 ) : ViewModel(),
-    VMDelegation<HomeUIEffect, HomeEvent, HomeUIState> by VMDelegationImpl(HomeUIState(loadingState = true)) {
+    VMDelegation<HomeUIEffect, HomeEvent, HomeUIState> by VMDelegationImpl(HomeUIState.Loading) {
 
     init {
 
         initViewModel(this)
 
-        getTokenFromDataStore()
+        collectEvent()
 
-        event.collect(viewModelScope) {
-            when (it) {
-                HomeEvent.PlayClicked -> {
-                    setEffect(HomeUIEffect.GoToCategoryScreen)
-                }
+        getTokenFromDataStore()
+    }
+
+    private fun collectEvent() = event.collect(viewModelScope) {
+        when (it) {
+            HomeEvent.PlayClicked -> {
+                setEffect(HomeUIEffect.GoToCategoryScreen)
             }
         }
     }
@@ -39,9 +45,10 @@ class HomeViewModel @Inject constructor(
         getTokenFromDataStoreUseCase.invoke().onEach { state ->
             when (state) {
                 is GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.Success -> {
-                    setState(HomeUIState(loadingState = false))
+                    setState(HomeUIState.TokenSuccess)
                 }
-                GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.NullToken -> {
+
+                GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.EmptyToken -> {
                     getSessionToken()
                 }
             }
@@ -51,13 +58,30 @@ class HomeViewModel @Inject constructor(
     private fun getSessionToken() {
         getSessionTokenUseCase.invoke().onEach {
             when (it) {
-                is Resource.Success -> {
-                    setState(HomeUIState(loadingState = false))
+                is GetSessionTokenUseCase.GetSessionTokenState.Success -> {
+                    saveToken(it.token)
                 }
-                is Resource.Error -> {
-                    setState(HomeUIState(loadingState = false))
-                    setEffect(HomeUIEffect.ShowFullScreenError(it.message))
+
+                is GetSessionTokenUseCase.GetSessionTokenState.Error -> {
+                    setEffect(HomeUIEffect.ShowError(it.errorMessage))
                 }
+
+                GetSessionTokenUseCase.GetSessionTokenState.EmptyToken -> {
+                    setEffect(HomeUIEffect.ShowError(stringResourceProvider.getString(R.string.something_went_wrong)))
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun saveToken(token: String) {
+        saveTokenUseCase.invoke(token).onEach {
+            when (it) {
+                SaveTokenUseCase.SaveTokenState.Success -> getTokenFromDataStore()
+                SaveTokenUseCase.SaveTokenState.Error -> setEffect(
+                    HomeUIEffect.ShowError(
+                        stringResourceProvider.getString(R.string.something_went_wrong)
+                    )
+                )
             }
         }.launchIn(viewModelScope)
     }

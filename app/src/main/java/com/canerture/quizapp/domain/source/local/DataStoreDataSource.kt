@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DataStoreDataSource {
 
-    suspend fun saveToken(token: String)
+    fun saveToken(token: String): Flow<Boolean>
 
     fun getToken(): Flow<String?>
 }

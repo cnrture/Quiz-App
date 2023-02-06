@@ -5,16 +5,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
-import com.canerture.quizapp.common.Constants.MULTIPLE_CHOICE
-import com.canerture.quizapp.common.Constants.TRUE_FALSE
 import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.common.extension.setWidthPercent
-import com.canerture.quizapp.common.extension.showFullPagePopup
+import com.canerture.quizapp.common.extension.showErrorPopup
 import com.canerture.quizapp.data.source.local.MockCategories
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
@@ -33,63 +30,66 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        collectState()
+        collectEffect()
+    }
+
+    private fun collectState() = categoryViewModel.state.collect(viewLifecycleOwner) { state ->
         with(binding) {
-            with(categoryViewModel) {
-                state.collect(viewLifecycleOwner) {
-                    progressBar.isVisible = it.loadingState
-
+            when (state) {
+                is CategoryUIState.Data -> {
                     rvCategories.adapter = categoriesAdapter
-                    categoriesAdapter.setData(MockCategories.getCategories())
-                }
-
-                effect.collect(viewLifecycleOwner) {
-                    when (it) {
-                        is CategoryUIEffect.GoToQuizScreen -> {
-                            val categoryToQuiz = CategoryFragmentDirections.categoryToQuiz(
-                                it.category,
-                                it.type
-                            )
-                            findNavController().navigate(categoryToQuiz)
-                        }
-                        is CategoryUIEffect.ShowFullScreenError -> {
-                            requireContext().showFullPagePopup(R.drawable.ic_error, it.message) {
-                            }
-                        }
-                    }
+                    categoriesAdapter.submitList(MockCategories.getCategories())
                 }
             }
         }
     }
 
-    private fun onCategoryClick(category: Int) {
-        showTypePopup {
-            categoryViewModel.setEvent(CategoryEvent.CategorySelected(category, it))
+    private fun collectEffect() = categoryViewModel.effect.collect(viewLifecycleOwner) { effect ->
+        when (effect) {
+            is CategoryUIEffect.GoToQuizScreen -> {
+                val categoryToQuiz = CategoryFragmentDirections.categoryToQuiz(
+                    effect.category,
+                    effect.type
+                )
+                findNavController().navigate(categoryToQuiz)
+            }
+
+            is CategoryUIEffect.ShowError -> {
+                requireContext().showErrorPopup(R.drawable.ic_error, effect.message)
+            }
         }
     }
 
-    private fun showTypePopup(
-        typeListener: (String) -> Unit,
-    ) {
-        Dialog(requireContext()).apply {
-            val binding = PopupDifficultyTypeBinding.inflate(layoutInflater, null, false)
-            setContentView(binding.root)
-            setWidthPercent(75)
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            setCancelable(true)
-            setCanceledOnTouchOutside(true)
+    private fun onCategoryClick(category: Int) = showTypePopup {
+        categoryViewModel.setEvent(CategoryEvent.CategorySelected(category, it))
+    }
 
-            with(binding) {
-                imgMultipleChoice.setOnClickListener {
-                    typeListener(MULTIPLE_CHOICE)
-                    dismiss()
-                }
-                imgTrueFalse.setOnClickListener {
-                    typeListener(TRUE_FALSE)
-                    dismiss()
-                }
+    private fun showTypePopup(typeListener: (String) -> Unit) = Dialog(requireContext()).apply {
+        val binding = PopupDifficultyTypeBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
+        setWidthPercent(WIDTH_PERCENT)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        setCancelable(true)
+        setCanceledOnTouchOutside(true)
+
+        with(binding) {
+            imgMultipleChoice.setOnClickListener {
+                typeListener(MULTIPLE_CHOICE)
+                dismiss()
             }
-
-            show()
+            imgTrueFalse.setOnClickListener {
+                typeListener(TRUE_FALSE)
+                dismiss()
+            }
         }
+
+        show()
+    }
+
+    companion object {
+        private const val WIDTH_PERCENT = 75
+        private const val MULTIPLE_CHOICE = "multiple"
+        private const val TRUE_FALSE = "boolean"
     }
 }

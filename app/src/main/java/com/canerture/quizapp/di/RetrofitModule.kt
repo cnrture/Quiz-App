@@ -1,6 +1,6 @@
 package com.canerture.quizapp.di
 
-import com.canerture.quizapp.common.Constants.BASE_URL
+import com.canerture.quizapp.BuildConfig
 import com.canerture.quizapp.data.source.remote.QuestionService
 import dagger.Module
 import dagger.Provides
@@ -17,7 +17,7 @@ object RetrofitModule {
     @Provides
     @Singleton
     fun provideSessionService(): QuestionService = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(QuestionService::class.java)

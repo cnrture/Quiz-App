@@ -52,7 +52,7 @@
     <fragment
         android:id="@+id/resultFragment"
         android:name="com.canerture.quizapp.presentation.result.ResultFragment"
-        android:label="ResultFragment" >
+        android:label="ResultFragment">
         <argument
             android:name="correctAnswers"
             app:argType="integer" />

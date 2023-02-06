@@ -3,7 +3,7 @@ package com.canerture.quizapp.mapper
 import com.canerture.quizapp.data.model.question.Question
 import com.canerture.quizapp.domain.model.question.QuestionUI
 
-fun List<Question>.toQuestionUIList() = map {
+fun List<Question>.toQuestionListUI() = map {
     val list = mutableListOf(
         it.correctAnswer.orEmpty(),
         it.incorrectAnswers?.getOrNull(0).orEmpty(),

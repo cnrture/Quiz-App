@@ -1,7 +1,6 @@
 package com.canerture.quizapp.domain.usecase
 
 import com.canerture.quizapp.common.Resource
-import com.canerture.quizapp.data.model.token.Token
 import com.canerture.quizapp.domain.repository.QuestionRepository
 import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
@@ -11,23 +10,29 @@ import kotlinx.coroutines.flow.callbackFlow
 class GetSessionTokenUseCase @Inject constructor(
     private val questionRepository: QuestionRepository,
 ) {
-    operator fun invoke(): Flow<Resource<Token>> = callbackFlow {
+    operator fun invoke(): Flow<GetSessionTokenState> = callbackFlow {
         questionRepository.getSessionToken().collect {
             when (it) {
                 is Resource.Success -> {
                     it.data.token?.let { token ->
-                        questionRepository.saveToken(token)
-                        trySend(Resource.Success(it.data))
+                        trySend(GetSessionTokenState.Success(token))
                     } ?: kotlin.run {
-                        trySend(Resource.Error("Something went wrong!"))
+                        trySend(GetSessionTokenState.EmptyToken)
                     }
                 }
+
                 is Resource.Error -> {
-                    trySend(Resource.Error(it.message))
+                    trySend(GetSessionTokenState.Error(it.message))
                 }
             }
         }
 
         awaitClose { channel.close() }
+    }
+
+    sealed class GetSessionTokenState {
+        data class Success(val token: String) : GetSessionTokenState()
+        object EmptyToken : GetSessionTokenState()
+        data class Error(val errorMessage: String) : GetSessionTokenState()
     }
 }

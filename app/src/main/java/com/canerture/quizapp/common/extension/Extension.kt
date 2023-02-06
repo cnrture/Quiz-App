@@ -3,7 +3,6 @@ package com.canerture.quizapp.common.extension
 import android.content.res.Resources
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.view.View
 
 fun View.visible() {
@@ -20,8 +19,4 @@ fun handler(delay: Long, function: () -> Unit) {
     }, delay)
 }
 
-fun Resources.toPixel(dp: Int) =
-    dp.toFloat() * (displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
-
-fun Resources.toPixel(dp: Float) =
-    dp * (displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
+fun Int.toPixel(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()

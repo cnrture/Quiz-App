@@ -39,20 +39,16 @@ class QuizAppButton @JvmOverloads constructor(
                 setText(getString(R.styleable.QuizAppButton_qab_text) ?: "")
 
                 setFontSize(
-                    resources.toPixel(
-                        getDimensionPixelSize(
-                            R.styleable.QuizAppButton_qab_fontSize,
-                            30
-                        )
+                    getDimension(
+                        R.styleable.QuizAppButton_qab_fontSize,
+                        30.toPixel().toFloat()
                     )
                 )
 
                 setRadius(
-                    resources.toPixel(
-                        getDimensionPixelSize(
-                            R.styleable.QuizAppButton_qab_radius,
-                            10
-                        )
+                    getDimension(
+                        R.styleable.QuizAppButton_qab_radius,
+                        10.toPixel().toFloat()
                     )
                 )
 
@@ -81,9 +77,11 @@ class QuizAppButton @JvmOverloads constructor(
                             startAnimation(AlphaAnimation(1F, 0.5F))
                             view.invalidate()
                         }
+
                         MotionEvent.ACTION_UP -> {
                             performClick()
                         }
+
                         MotionEvent.ACTION_CANCEL -> {
                             clearAnimation()
                             view.invalidate()

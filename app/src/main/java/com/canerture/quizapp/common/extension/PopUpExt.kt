@@ -21,10 +21,10 @@ fun Dialog.setWidthPercent(percentage: Int) {
     window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
 }
 
-fun Context.showPopup(
+fun Context.showErrorPopup(
     @DrawableRes iconId: Int,
     title: String,
-    dismissListener: () -> Unit,
+    dismissListener: (() -> Unit?)? = null,
 ) {
     Dialog(this).apply {
         val binding = PopupErrorBinding.inflate(layoutInflater, null, false)
@@ -34,7 +34,7 @@ fun Context.showPopup(
         setCancelable(true)
         setCanceledOnTouchOutside(true)
         setOnCancelListener {
-            dismissListener()
+            dismissListener?.invoke()
         }
 
         with(binding) {
@@ -42,7 +42,7 @@ fun Context.showPopup(
             tvMessage.text = title
             btnOkay.setOnClickListener {
                 dismiss()
-                dismissListener()
+                dismissListener?.invoke()
             }
         }
 
@@ -50,7 +50,7 @@ fun Context.showPopup(
     }
 }
 
-fun Context.showFullPagePopup(
+fun Context.showFullPageErrorPopup(
     @DrawableRes iconId: Int,
     title: String? = null,
     dismissListener: () -> Unit,

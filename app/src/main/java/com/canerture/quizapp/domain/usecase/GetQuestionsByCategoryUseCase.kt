@@ -3,7 +3,7 @@ package com.canerture.quizapp.domain.usecase
 import com.canerture.quizapp.common.Resource
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.repository.QuestionRepository
-import com.canerture.quizapp.mapper.toQuestionUIList
+import com.canerture.quizapp.mapper.toQuestionListUI
 import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,16 +20,17 @@ class GetQuestionsByCategoryUseCase @Inject constructor(
         questionRepository.getQuestionsByCategory(category, type, token).collect {
             when (it) {
                 is Resource.Success -> {
-                    if (it.data.responseCode == 3) {
-                        trySend(GetQuestionsByCategoryState.TokenEmpty)
+                    if (it.data.responseCode == TOKEN_NOT_FOUND) {
+                        trySend(GetQuestionsByCategoryState.EmptyToken)
                     } else {
                         if (it.data.questions.isNullOrEmpty().not()) {
-                            trySend(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionUIList()))
+                            trySend(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionListUI()))
                         } else {
-                            trySend(GetQuestionsByCategoryState.Error("Empty question list!"))
+                            trySend(GetQuestionsByCategoryState.EmptyList)
                         }
                     }
                 }
+
                 is Resource.Error -> {
                     trySend(GetQuestionsByCategoryState.Error(it.message))
                 }
@@ -40,8 +41,13 @@ class GetQuestionsByCategoryUseCase @Inject constructor(
     }
 
     sealed class GetQuestionsByCategoryState {
-        class Success(val questionList: List<QuestionUI>) : GetQuestionsByCategoryState()
-        object TokenEmpty : GetQuestionsByCategoryState()
-        class Error(val errorMessage: String) : GetQuestionsByCategoryState()
+        data class Success(val questionList: List<QuestionUI>) : GetQuestionsByCategoryState()
+        data class Error(val errorMessage: String) : GetQuestionsByCategoryState()
+        object EmptyList : GetQuestionsByCategoryState()
+        object EmptyToken : GetQuestionsByCategoryState()
+    }
+
+    companion object {
+        const val TOKEN_NOT_FOUND = 3
     }
 }

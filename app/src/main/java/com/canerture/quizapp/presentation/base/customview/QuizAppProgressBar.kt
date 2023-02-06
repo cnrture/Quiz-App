@@ -35,12 +35,10 @@ class QuizAppProgressBar @JvmOverloads constructor(
         context.theme.obtainStyledAttributes(attrs, R.styleable.QuizAppProgressBar, 0, 0).apply {
             try {
                 setThickness(
-                    resources.toPixel(
-                        getDimensionPixelSize(
-                            R.styleable.QuizAppProgressBar_qapb_thickness,
-                            24
-                        )
-                    )
+                    getDimensionPixelSize(
+                        R.styleable.QuizAppProgressBar_qapb_thickness,
+                        24.toPixel()
+                    ).toFloat()
                 )
 
                 setMaxProgress(getFloat(R.styleable.QuizAppProgressBar_qapb_maxProgress, 60f))

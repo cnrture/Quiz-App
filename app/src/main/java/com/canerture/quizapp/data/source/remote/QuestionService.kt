@@ -12,9 +12,9 @@ interface QuestionService {
 
     @GET("api.php/")
     suspend fun getQuestionsByCategory(
-        @Query("amount") amount: Int = 10,
         @Query("category") category: Int,
         @Query("type") type: String,
-        @Query("token") token: String
+        @Query("token") token: String,
+        @Query("amount") amount: Int = 10
     ): Result
 }

@@ -55,5 +55,11 @@ class QuestionsRepositoryImpl(
         awaitClose { channel.close() }
     }
 
-    override suspend fun saveToken(token: String) = dataStoreDataSource.saveToken(token)
+    override fun saveToken(token: String): Flow<Boolean> = callbackFlow {
+        dataStoreDataSource.saveToken(token).collect {
+            trySend(it)
+        }
+
+        awaitClose { channel.close() }
+    }
 }

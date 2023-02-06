@@ -13,13 +13,13 @@ class GetTokenFromDataStoreUseCase @Inject constructor(
             it?.let {
                 trySend(GetTokenFromDataStoreState.Success(it))
             } ?: kotlin.run {
-                trySend(GetTokenFromDataStoreState.NullToken)
+                trySend(GetTokenFromDataStoreState.EmptyToken)
             }
         }
     }
 
     sealed class GetTokenFromDataStoreState {
-        class Success(val token: String) : GetTokenFromDataStoreState()
-        object NullToken : GetTokenFromDataStoreState()
+        data class Success(val token: String) : GetTokenFromDataStoreState()
+        object EmptyToken : GetTokenFromDataStoreState()
     }
 }

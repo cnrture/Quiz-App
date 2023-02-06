@@ -47,12 +47,14 @@ class QuizAppAnswerButton @JvmOverloads constructor(
                 R.color.white,
                 false
             )
+
             CorrectType.Correct -> buttonState(
                 R.drawable.ic_correct,
                 R.color.green,
                 R.color.light_green,
                 false
             )
+
             CorrectType.Incorrect -> buttonState(
                 R.drawable.ic_incorrect,
                 R.color.red,

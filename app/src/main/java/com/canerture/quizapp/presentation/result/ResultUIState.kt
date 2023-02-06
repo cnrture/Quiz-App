@@ -2,7 +2,7 @@ package com.canerture.quizapp.presentation.result
 
 import com.canerture.quizapp.presentation.base.State
 
-data class ResultUIState(
-    val loadingState: Boolean = false,
-    val result: Float = 0f
-) : State
+sealed class ResultUIState : State {
+    object Loading : ResultUIState()
+    data class Data(val result: Float, val lowerThanFifty: Boolean) : ResultUIState()
+}
