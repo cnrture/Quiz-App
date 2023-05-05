@@ -1,6 +1,6 @@
 package com.canerture.quizapp.presentation.home
 
-import com.canerture.quizapp.presentation.base.Effect
+import com.canerture.quizapp.presentation.base.viewmodel.Effect
 
 sealed class HomeUIEffect : Effect {
     object GoToCategoryScreen : HomeUIEffect()

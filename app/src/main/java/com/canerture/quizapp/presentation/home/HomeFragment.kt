@@ -10,8 +10,8 @@ import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.common.extension.gone
 import com.canerture.quizapp.common.extension.showErrorPopup
 import com.canerture.quizapp.common.extension.visible
+import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentHomeBinding
-import com.canerture.quizapp.delegation.viewBinding
 import com.canerture.quizapp.presentation.activity.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -2,10 +2,10 @@ package com.canerture.quizapp.domain.usecase
 
 import com.canerture.quizapp.common.Resource
 import com.canerture.quizapp.domain.repository.QuestionRepository
-import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
 class GetSessionTokenUseCase @Inject constructor(
     private val questionRepository: QuestionRepository,

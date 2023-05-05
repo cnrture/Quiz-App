@@ -4,16 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.R
 import com.canerture.quizapp.common.extension.collect
-import com.canerture.quizapp.delegation.viewmodel.VMDelegation
-import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import com.canerture.quizapp.domain.usecase.SaveTokenUseCase
 import com.canerture.quizapp.infrastructure.provider.StringResourceProvider
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegation
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -73,16 +74,7 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun saveToken(token: String) {
-        saveTokenUseCase.invoke(token).onEach {
-            when (it) {
-                SaveTokenUseCase.SaveTokenState.Success -> getTokenFromDataStore()
-                SaveTokenUseCase.SaveTokenState.Error -> setEffect(
-                    HomeUIEffect.ShowError(
-                        stringResourceProvider.getString(R.string.something_went_wrong)
-                    )
-                )
-            }
-        }.launchIn(viewModelScope)
+    private fun saveToken(token: String) = viewModelScope.launch {
+        saveTokenUseCase.invoke(token)
     }
 }

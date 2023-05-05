@@ -1,4 +1,4 @@
-package com.canerture.quizapp.delegation
+package com.canerture.quizapp.common
 
 import android.view.LayoutInflater
 import android.view.View

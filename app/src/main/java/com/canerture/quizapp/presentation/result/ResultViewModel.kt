@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.extension.collect
-import com.canerture.quizapp.delegation.viewmodel.VMDelegation
-import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegation
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -23,8 +23,8 @@ class ResultViewModel @Inject constructor(
 
         savedStateHandle.get<Int>(CORRECT_ANSWERS)?.let {
             val result = it.toFloat() / NUMBER_TEN * NUMBER_HUNDRED
-            val lowerThanFifty = result < NUMBER_FIFTY
-            setState(ResultUIState.Data(result, lowerThanFifty))
+            val isLowerThanFifty = result < NUMBER_FIFTY
+            setState(ResultUIState.Data(result, isLowerThanFifty))
         }
     }
 

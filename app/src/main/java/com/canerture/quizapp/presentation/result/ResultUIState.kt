@@ -1,6 +1,6 @@
 package com.canerture.quizapp.presentation.result
 
-import com.canerture.quizapp.presentation.base.State
+import com.canerture.quizapp.presentation.base.viewmodel.State
 
 sealed class ResultUIState : State {
     object Loading : ResultUIState()

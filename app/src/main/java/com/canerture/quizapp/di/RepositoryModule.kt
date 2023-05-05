@@ -2,8 +2,8 @@ package com.canerture.quizapp.di
 
 import com.canerture.quizapp.data.repository.QuestionsRepositoryImpl
 import com.canerture.quizapp.domain.repository.QuestionRepository
-import com.canerture.quizapp.domain.source.local.DataStoreDataSource
-import com.canerture.quizapp.domain.source.remote.QuestionDataSource
+import com.canerture.quizapp.data.source.local.DataStoreDataSource
+import com.canerture.quizapp.data.source.remote.QuestionDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

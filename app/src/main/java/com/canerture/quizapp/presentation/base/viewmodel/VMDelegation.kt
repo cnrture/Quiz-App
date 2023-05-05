@@ -1,9 +1,6 @@
-package com.canerture.quizapp.delegation.viewmodel
+package com.canerture.quizapp.presentation.base.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.canerture.quizapp.presentation.base.Effect
-import com.canerture.quizapp.presentation.base.Event
-import com.canerture.quizapp.presentation.base.State
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 

@@ -4,8 +4,8 @@ import android.content.Context
 import com.canerture.quizapp.data.source.local.DataStoreDataSourceImpl
 import com.canerture.quizapp.data.source.remote.QuestionDataSourceImpl
 import com.canerture.quizapp.data.source.remote.QuestionService
-import com.canerture.quizapp.domain.source.local.DataStoreDataSource
-import com.canerture.quizapp.domain.source.remote.QuestionDataSource
+import com.canerture.quizapp.data.source.local.DataStoreDataSource
+import com.canerture.quizapp.data.source.remote.QuestionDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -12,8 +12,8 @@ import com.canerture.quizapp.common.extension.gone
 import com.canerture.quizapp.common.extension.handler
 import com.canerture.quizapp.common.extension.showErrorPopup
 import com.canerture.quizapp.common.extension.visible
+import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentQuizBinding
-import com.canerture.quizapp.delegation.viewBinding
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton
 import com.canerture.quizapp.presentation.base.customview.QuizAppAnswerButton.CorrectType

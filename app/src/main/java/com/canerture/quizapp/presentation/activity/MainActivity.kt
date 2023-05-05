@@ -2,8 +2,8 @@ package com.canerture.quizapp.presentation.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.ActivityMainBinding
-import com.canerture.quizapp.delegation.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -4,10 +4,10 @@ import com.canerture.quizapp.common.Resource
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.repository.QuestionRepository
 import com.canerture.quizapp.mapper.toQuestionListUI
-import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
 class GetQuestionsByCategoryUseCase @Inject constructor(
     private val questionRepository: QuestionRepository,

@@ -10,13 +10,13 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:padding="12dp"
-        app:qab_text="Okay"
-        app:qab_textStyle="bold"
-        app:qab_backgroundColor="@color/pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/iv_image"
         app:layout_constraintStart_toStartOf="@+id/iv_image"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_message"
+        app:qab_backgroundColor="@color/pink"
+        app:qab_text="Okay"
+        app:qab_textStyle="bold" />
 
     <ImageView
         android:id="@+id/iv_image"

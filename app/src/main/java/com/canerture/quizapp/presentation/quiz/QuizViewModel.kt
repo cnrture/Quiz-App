@@ -5,18 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.R
 import com.canerture.quizapp.common.extension.collect
-import com.canerture.quizapp.delegation.viewmodel.VMDelegation
-import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.usecase.GetQuestionsByCategoryUseCase
 import com.canerture.quizapp.domain.usecase.GetSessionTokenUseCase
 import com.canerture.quizapp.domain.usecase.GetTokenFromDataStoreUseCase
 import com.canerture.quizapp.domain.usecase.SaveTokenUseCase
 import com.canerture.quizapp.infrastructure.provider.StringResourceProvider
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegation
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -32,8 +33,8 @@ class QuizViewModel @Inject constructor(
     private var questionIndex = 0
     private var questionList = listOf<QuestionUI>()
 
-    var category: Int? = null
-    var type: String? = null
+    private var category: Int? = null
+    private var type: String? = null
 
     private var correctAnswers = 0
 
@@ -47,7 +48,7 @@ class QuizViewModel @Inject constructor(
         type = savedStateHandle.get<String>(TYPE)
 
         if (category != null && type != null) getTokenFromDataStore(category!!, type!!)
-        else setEffect(QuizUIEffect.ShowError("Something went wrong!"))
+        else setEffect(QuizUIEffect.ShowError(stringResourceProvider.getString(R.string.something_went_wrong)))
     }
 
     private fun collectEvent() = event.collect(viewModelScope) { event ->
@@ -151,17 +152,8 @@ class QuizViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun saveToken(token: String) {
-        saveTokenUseCase.invoke(token).onEach {
-            when (it) {
-                SaveTokenUseCase.SaveTokenState.Success -> getTokenFromDataStore(category!!, type!!)
-                SaveTokenUseCase.SaveTokenState.Error -> setEffect(
-                    QuizUIEffect.ShowError(
-                        stringResourceProvider.getString(R.string.something_went_wrong)
-                    )
-                )
-            }
-        }.launchIn(viewModelScope)
+    private fun saveToken(token: String) = viewModelScope.launch {
+        saveTokenUseCase.invoke(token)
     }
 
     companion object {

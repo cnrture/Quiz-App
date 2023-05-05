@@ -4,22 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.data.source.local.MockCategories
-import com.canerture.quizapp.delegation.viewmodel.VMDelegation
-import com.canerture.quizapp.delegation.viewmodel.VMDelegationImpl
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegation
+import com.canerture.quizapp.presentation.base.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
 @HiltViewModel
-class CategoryViewModel @Inject constructor() :
-    ViewModel(),
+class CategoryViewModel : ViewModel(),
     VMDelegation<CategoryUIEffect, CategoryEvent, CategoryUIState> by VMDelegationImpl(
         CategoryUIState.Data(MockCategories.getCategories())
     ) {
 
     init {
-
         initViewModel(this)
-
         collectEvent()
     }
 

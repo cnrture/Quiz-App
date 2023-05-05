@@ -1,7 +1,7 @@
 package com.canerture.quizapp.presentation.quiz
 
 import com.canerture.quizapp.domain.model.question.QuestionUI
-import com.canerture.quizapp.presentation.base.State
+import com.canerture.quizapp.presentation.base.viewmodel.State
 
 sealed class QuizUIState : State {
     object Loading : QuizUIState()

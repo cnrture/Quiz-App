@@ -7,8 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.canerture.quizapp.R
 import com.canerture.quizapp.common.extension.collect
+import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentResultBinding
-import com.canerture.quizapp.delegation.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

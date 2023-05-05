@@ -12,10 +12,10 @@ import com.canerture.quizapp.R
 import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.common.extension.setWidthPercent
 import com.canerture.quizapp.common.extension.showErrorPopup
+import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.data.source.local.MockCategories
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
-import com.canerture.quizapp.delegation.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
