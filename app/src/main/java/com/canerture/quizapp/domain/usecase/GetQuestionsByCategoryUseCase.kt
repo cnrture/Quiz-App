@@ -4,10 +4,9 @@ import com.canerture.quizapp.common.Resource
 import com.canerture.quizapp.domain.model.question.QuestionUI
 import com.canerture.quizapp.domain.repository.QuestionRepository
 import com.canerture.quizapp.mapper.toQuestionListUI
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class GetQuestionsByCategoryUseCase @Inject constructor(
     private val questionRepository: QuestionRepository,
@@ -16,28 +15,24 @@ class GetQuestionsByCategoryUseCase @Inject constructor(
         category: Int,
         type: String,
         token: String,
-    ): Flow<GetQuestionsByCategoryState> = callbackFlow {
+    ): Flow<GetQuestionsByCategoryState> = flow {
         questionRepository.getQuestionsByCategory(category, type, token).collect {
             when (it) {
                 is Resource.Success -> {
                     if (it.data.responseCode == TOKEN_NOT_FOUND) {
-                        trySend(GetQuestionsByCategoryState.EmptyToken)
+                        emit(GetQuestionsByCategoryState.EmptyToken)
                     } else {
                         if (it.data.questions.isNullOrEmpty().not()) {
-                            trySend(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionListUI()))
+                            emit(GetQuestionsByCategoryState.Success(it.data.questions!!.toQuestionListUI()))
                         } else {
-                            trySend(GetQuestionsByCategoryState.EmptyList)
+                            emit(GetQuestionsByCategoryState.EmptyList)
                         }
                     }
                 }
 
-                is Resource.Error -> {
-                    trySend(GetQuestionsByCategoryState.Error(it.message))
-                }
+                is Resource.Error -> emit(GetQuestionsByCategoryState.Error(it.message))
             }
         }
-
-        awaitClose { channel.close() }
     }
 
     sealed class GetQuestionsByCategoryState {

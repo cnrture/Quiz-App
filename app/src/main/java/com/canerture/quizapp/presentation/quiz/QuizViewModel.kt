@@ -14,10 +14,10 @@ import com.canerture.quizapp.infrastructure.provider.StringResourceProvider
 import com.canerture.quizapp.presentation.base.viewmodel.VMDelegation
 import com.canerture.quizapp.presentation.base.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -28,7 +28,7 @@ class QuizViewModel @Inject constructor(
     private val stringResourceProvider: StringResourceProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
-    VMDelegation<QuizUIEffect, QuizEvent, QuizUIState> by VMDelegationImpl(QuizUIState.Loading) {
+    VMDelegation<QuizUIEffect, QuizEvent, QuizUIState> by VMDelegationImpl(QuizUIState(true)) {
 
     private var questionIndex = 0
     private var questionList = listOf<QuestionUI>()
@@ -91,14 +91,21 @@ class QuizViewModel @Inject constructor(
         questionIndex++
         val question = questionList[questionIndex]
         question.allAnswers.shuffle()
-        setState(QuizUIState.Data(question, questionIndex + 1, questionList.size))
+        setState(
+            QuizUIState(
+                question = question,
+                questionIndex = questionIndex + 1,
+                questionCount = questionList.size
+            )
+        )
     }
 
     private fun getTokenFromDataStore(category: Int, type: String) {
         getTokenFromDataStoreUseCase.invoke().onEach { state ->
             when (state) {
-                is GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.Success ->
+                is GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.Success -> {
                     getQuestionsByCategory(category, type, state.token)
+                }
 
                 GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.EmptyToken -> getSessionToken()
             }
@@ -111,43 +118,43 @@ class QuizViewModel @Inject constructor(
                 is GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.Success -> {
                     questionList = state.questionList
                     setState(
-                        QuizUIState.Data(
-                            questionList[questionIndex],
-                            questionIndex + 1,
-                            questionList.size
+                        QuizUIState(
+                            isLoading = false,
+                            question = questionList[questionIndex],
+                            questionIndex = questionIndex + 1,
+                            questionCount = questionList.size
                         )
                     )
                 }
 
                 GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.EmptyToken -> getSessionToken()
 
-                GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.EmptyList -> setEffect(
-                    QuizUIEffect.ShowError(stringResourceProvider.getString(R.string.empty_question_list))
-                )
+                GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.EmptyList -> {
+                    setState(getCurrentState().copy(isLoading = false))
+                    setEffect(QuizUIEffect.ShowError(stringResourceProvider.getString(R.string.empty_question_list)))
+                }
 
-                is GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.Error -> setEffect(
-                    QuizUIEffect.ShowError(state.errorMessage)
-                )
+                is GetQuestionsByCategoryUseCase.GetQuestionsByCategoryState.Error -> {
+                    setState(getCurrentState().copy(isLoading = false))
+                    setEffect(QuizUIEffect.ShowError(state.errorMessage))
+                }
             }
         }.launchIn(viewModelScope)
     }
 
     private fun getSessionToken() {
         getSessionTokenUseCase.invoke().onEach {
+            setState(getCurrentState().copy(isLoading = false))
             when (it) {
                 is GetSessionTokenUseCase.GetSessionTokenState.Success -> saveToken(it.token)
 
-                is GetSessionTokenUseCase.GetSessionTokenState.Error -> setEffect(
-                    QuizUIEffect.ShowError(
-                        it.errorMessage
-                    )
-                )
+                is GetSessionTokenUseCase.GetSessionTokenState.Error -> {
+                    setEffect(QuizUIEffect.ShowError(it.errorMessage))
+                }
 
-                GetSessionTokenUseCase.GetSessionTokenState.EmptyToken -> setEffect(
-                    QuizUIEffect.ShowError(
-                        stringResourceProvider.getString(R.string.something_went_wrong)
-                    )
-                )
+                GetSessionTokenUseCase.GetSessionTokenState.EmptyToken -> {
+                    setEffect(QuizUIEffect.ShowError(stringResourceProvider.getString(R.string.something_went_wrong)))
+                }
             }
         }.launchIn(viewModelScope)
     }

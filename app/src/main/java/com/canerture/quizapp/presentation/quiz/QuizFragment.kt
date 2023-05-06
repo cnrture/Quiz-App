@@ -3,6 +3,7 @@ package com.canerture.quizapp.presentation.quiz
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -11,7 +12,6 @@ import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.common.extension.gone
 import com.canerture.quizapp.common.extension.handler
 import com.canerture.quizapp.common.extension.showErrorPopup
-import com.canerture.quizapp.common.extension.visible
 import com.canerture.quizapp.common.viewBinding
 import com.canerture.quizapp.databinding.FragmentQuizBinding
 import com.canerture.quizapp.domain.model.question.QuestionUI
@@ -45,12 +45,11 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
     }
 
     private fun collectState() = quizViewModel.state.collect(viewLifecycleOwner) { state ->
-        when (state) {
-            QuizUIState.Loading -> binding.progressBar.visible()
-            is QuizUIState.Data -> {
-                binding.progressBar.gone()
-                setData(state.question, state.questionIndex, state.questionCount)
-            }
+
+        binding.progressBar.isVisible = state.isLoading
+
+        if (state.question != null && state.questionIndex != null && state.questionCount != null) {
+            setData(state.question, state.questionIndex, state.questionCount)
         }
     }
 

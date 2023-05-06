@@ -31,20 +31,12 @@ class ResultFragment : Fragment(R.layout.fragment_result) {
 
     private fun collectState() = quizViewModel.state.collect(viewLifecycleOwner) { state ->
         with(binding) {
-            when (state) {
-                ResultUIState.Loading -> Unit
-                is ResultUIState.Data -> {
-                    tvScore.text = "%${String.format("%.1f", state.result)}"
-                    progressBarResult.setProgress(state.result)
+            state.result?.let {
+                tvScore.text = "$it / 10"
+                progressBarResult.setProgress(it.toFloat() * 10)
 
-                    if (state.lowerThanFifty) {
-                        imgResult.setImageResource(R.drawable.ic_incorrect)
-                        progressBarResult.setFillColor(requireContext().getColor(R.color.pink))
-                    } else {
-                        imgResult.setImageResource(R.drawable.ic_correct)
-                        progressBarResult.setFillColor(requireContext().getColor(R.color.green))
-                    }
-                }
+                if (state.lowerThanFifty) setResultColors(R.drawable.ic_incorrect, R.color.pink)
+                else setResultColors(R.drawable.ic_correct, R.color.green)
             }
         }
     }
@@ -53,5 +45,10 @@ class ResultFragment : Fragment(R.layout.fragment_result) {
         when (effect) {
             ResultUIEffect.GoHome -> findNavController().navigate(R.id.resultToHome)
         }
+    }
+
+    private fun setResultColors(drawable: Int, color: Int) {
+        binding.imgResult.setImageResource(drawable)
+        binding.progressBarResult.setFillColor(requireContext().getColor(color))
     }
 }

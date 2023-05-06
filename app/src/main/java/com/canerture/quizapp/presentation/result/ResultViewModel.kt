@@ -13,7 +13,7 @@ import javax.inject.Inject
 class ResultViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
-    VMDelegation<ResultUIEffect, ResultEvent, ResultUIState> by VMDelegationImpl(ResultUIState.Loading) {
+    VMDelegation<ResultUIEffect, ResultEvent, ResultUIState> by VMDelegationImpl(ResultUIState()) {
 
     init {
 
@@ -22,9 +22,8 @@ class ResultViewModel @Inject constructor(
         collectEvent()
 
         savedStateHandle.get<Int>(CORRECT_ANSWERS)?.let {
-            val result = it.toFloat() / NUMBER_TEN * NUMBER_HUNDRED
-            val isLowerThanFifty = result < NUMBER_FIFTY
-            setState(ResultUIState.Data(result, isLowerThanFifty))
+            val isLowerThanFive = it < NUMBER_FIVE
+            setState(ResultUIState(it, isLowerThanFive))
         }
     }
 
@@ -38,7 +37,7 @@ class ResultViewModel @Inject constructor(
 
     companion object {
         private const val NUMBER_TEN = 10
-        private const val NUMBER_FIFTY = 10
+        private const val NUMBER_FIVE = 5
         private const val NUMBER_HUNDRED = 100
         private const val CORRECT_ANSWERS = "correctAnswers"
     }

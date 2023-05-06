@@ -13,7 +13,6 @@ import com.canerture.quizapp.common.extension.collect
 import com.canerture.quizapp.common.extension.setWidthPercent
 import com.canerture.quizapp.common.extension.showErrorPopup
 import com.canerture.quizapp.common.viewBinding
-import com.canerture.quizapp.data.source.local.MockCategories
 import com.canerture.quizapp.databinding.FragmentCategoryBinding
 import com.canerture.quizapp.databinding.PopupDifficultyTypeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,12 +35,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
 
     private fun collectState() = categoryViewModel.state.collect(viewLifecycleOwner) { state ->
         with(binding) {
-            when (state) {
-                is CategoryUIState.Data -> {
-                    rvCategories.adapter = categoriesAdapter
-                    categoriesAdapter.submitList(MockCategories.getCategories())
-                }
-            }
+            rvCategories.adapter = categoriesAdapter
+            categoriesAdapter.submitList(state.data)
         }
     }
 

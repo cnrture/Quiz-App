@@ -23,6 +23,8 @@ class VMDelegationImpl<EFFECT : Effect, EVENT : Event, STATE : State>(
     private val _stateTemp = MutableStateFlow(setInitialState)
     override val state = _stateTemp.asStateFlow()
 
+    override fun getCurrentState() = state.value
+
     override fun initViewModel(viewModel: ViewModel) {
         this.viewModel = viewModel
     }

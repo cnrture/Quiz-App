@@ -11,10 +11,10 @@ import com.canerture.quizapp.infrastructure.provider.StringResourceProvider
 import com.canerture.quizapp.presentation.base.viewmodel.VMDelegation
 import com.canerture.quizapp.presentation.base.viewmodel.VMDelegationImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -23,14 +23,11 @@ class HomeViewModel @Inject constructor(
     private val saveTokenUseCase: SaveTokenUseCase,
     private val stringResourceProvider: StringResourceProvider
 ) : ViewModel(),
-    VMDelegation<HomeUIEffect, HomeEvent, HomeUIState> by VMDelegationImpl(HomeUIState.Loading) {
+    VMDelegation<HomeUIEffect, HomeEvent, HomeUIState> by VMDelegationImpl(HomeUIState(true)) {
 
     init {
-
         initViewModel(this)
-
         collectEvent()
-
         getTokenFromDataStore()
     }
 
@@ -46,7 +43,7 @@ class HomeViewModel @Inject constructor(
         getTokenFromDataStoreUseCase.invoke().onEach { state ->
             when (state) {
                 is GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.Success -> {
-                    setState(HomeUIState.TokenSuccess)
+                    setState(HomeUIState(false))
                 }
 
                 GetTokenFromDataStoreUseCase.GetTokenFromDataStoreState.EmptyToken -> {
@@ -58,6 +55,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getSessionToken() {
         getSessionTokenUseCase.invoke().onEach {
+            setState(HomeUIState(false))
             when (it) {
                 is GetSessionTokenUseCase.GetSessionTokenState.Success -> {
                     saveToken(it.token)
